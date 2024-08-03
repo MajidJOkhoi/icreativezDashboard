@@ -1,0 +1,67 @@
+[
+  {
+    "name": "J.K. Rowling",
+    "email": "jkrowling@example.com",
+    "password": "JK123"
+  },
+  {
+    "name": "George R.R. Martin",
+    "email": "grrmartin@example.com",
+    "password": "George123"
+  },
+  {
+    "name": "J.R.R. Tolkien",
+    "email": "jrrtolkien@example.com",
+    "password": "JRR123"
+  },
+  {
+    "name": "F. Scott Fitzgerald",
+    "email": "fscottfitzgerald@example.com",
+    "password": "F123"
+  },
+  {
+    "name": "Jane Austen",
+    "email": "janeausten@example.com",
+    "password": "Jane123"
+  },
+  {
+    "name": "Jordan B. Peterson",
+    "email": "jordanpeterson@example.com",
+    "password": "Jordan123"
+  },
+  {
+    "name": "Napoleon Hill",
+    "email": "napoleonhill@example.com",
+    "password": "Napoleon123"
+  },
+  {
+    "name": "James Clear",
+    "email": "jamesclear@example.com",
+    "password": "James123"
+  },
+  {
+    "name": "Demi Lovato",
+    "email": "demilovato@example.com",
+    "password": "Demi123"
+  },
+  {
+    "name": "Charles Duhigg",
+    "email": "charlesduhigg@example.com",
+    "password": "Charles123"
+  },
+  {
+    "name": "Terri Savelle Foy",
+    "email": "terrisavellefoy@example.com",
+    "password": "Terri123"
+  },
+  {
+    "name": "Henning Nelms",
+    "email": "henningnelms@example.com",
+    "password": "Henning123"
+  },
+  {
+    "name": "Morgan Housel",
+    "email": "morganhousel@example.com",
+    "password": "Morgan123"
+  }
+]
