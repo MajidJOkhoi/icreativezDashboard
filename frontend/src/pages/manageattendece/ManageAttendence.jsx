@@ -68,6 +68,58 @@ const sampleRequests = [
     approval: "approved",
     avatar: "https://via.placeholder.com/50",
   },
+  // Add more sample data here for testing pagination
+  {
+    id: "4",
+    name: "Sarah Johnson",
+    workingHours: "160 hours",
+    month: "July",
+    jobType: "Full-Time",
+    totalLeaves: "4 days",
+    approval: "approved",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: "5",
+    name: "Michael Smith",
+    workingHours: "150 hours",
+    month: "July",
+    jobType: "Part-Time",
+    totalLeaves: "2 days",
+    approval: "pending",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: "6",
+    name: "Emma Brown",
+    workingHours: "170 hours",
+    month: "June",
+    jobType: "Contract",
+    totalLeaves: "1 day",
+    approval: "approved",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: "7",
+    name: "Majid",
+    workingHours: "170 hours",
+    month: "June",
+    jobType: "Contract",
+    totalLeaves: "1 day",
+    approval: "approved",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: "8",
+    name: "Sajid",
+    workingHours: "170 hours",
+    month: "June",
+    jobType: "Contract",
+    totalLeaves: "1 day",
+    approval: "approved",
+    avatar: "https://via.placeholder.com/50",
+  },
+  // Add more records as needed...
 ];
 
 const ManageAttendance = () => {
@@ -78,6 +130,8 @@ const ManageAttendance = () => {
   const [error, setError] = useState(null);
   const [searchName, setSearchName] = useState("");
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [requestsPerPage] = useState(5);
 
   const navigateToTimeOffPage = () => {
     // navigate(`/dashboard/time-off/create`);
@@ -120,6 +174,13 @@ const ManageAttendance = () => {
     }
     setFilteredRequests(filtered);
   };
+
+  // Pagination logic
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = filteredRequests.slice(indexOfFirstRequest, indexOfLastRequest);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return (
@@ -202,7 +263,7 @@ const ManageAttendance = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredRequests.map((request) => (
+              {currentRequests.map((request) => (
                 <TableRow key={request.id} className="cursor-pointer hover:bg-gray-100" onClick={() => navigate(`/dashboard/attendencedetails`)}>
                   <TableCell>
                     <div className="flex items-center space-x-2">
@@ -239,9 +300,41 @@ const ManageAttendance = () => {
               ))}
             </TableBody>
           </Table>
+          {/* Pagination */}
+          <div className="flex justify-center mt-4">
+            <Pagination
+              requestsPerPage={requestsPerPage}
+              totalRequests={filteredRequests.length}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          </div>
         </CardContent>
       </Card>
     </>
+  );
+};
+
+// Custom Pagination Component
+const Pagination = ({ requestsPerPage, totalRequests, paginate, currentPage }) => {
+  const pageNumbers = [];
+
+  for (let i = 1; i <= Math.ceil(totalRequests / requestsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <nav>
+      <ul className="flex space-x-2">
+        {pageNumbers.map(number => (
+          <li key={number} className={`page-item ${currentPage === number ? 'font-bold' : ''}`}>
+            <button onClick={() => paginate(number)} className="px-3 py-1 border rounded">
+              {number}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 

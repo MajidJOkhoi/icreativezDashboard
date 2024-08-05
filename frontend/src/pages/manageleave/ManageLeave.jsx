@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { LoaderCircle, MoreHorizontalIcon, PlusCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, LoaderCircle, MoreHorizontalIcon, PlusCircle } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar } from "@/components/ui/avatar";
 
+// Sample requests array for testing purposes
 const sampleRequests = [
   {
     id: "1",
@@ -69,13 +70,49 @@ const sampleRequests = [
     approval: "approved",
     avatar: "https://via.placeholder.com/50",
   },
+  {
+    id: "4",
+    name: "Ivan Bryant",
+    role: "Product Designer",
+    duration: "3 days",
+    date: "23rd - 25th Aug 2022",
+    type: "Sick Leave",
+    reason: "Sick Leave",
+    approval: "pending",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: "5",
+    name: "Jack Dylen",
+    role: "UI/UX Designer",
+    duration: "2 days",
+    date: "26th - 27th Aug 2022",
+    type: "PTO",
+    reason: "Personal Time Off",
+    approval: "pending",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: "6",
+    name: "Jamie Blue",
+    role: "Project Manager",
+    duration: "1 day",
+    date: "27th Aug 2022",
+    type: "Parent Duty",
+    reason: "Parent Duty",
+    approval: "approved",
+    avatar: "https://via.placeholder.com/50",
+  },
+  // Add more sample requests as needed
 ];
 
 const ManageLeave = () => {
   const navigate = useNavigate();
   const [requests, setRequests] = useState(sampleRequests);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const requestsPerPage = 5; // Number of requests to display per page
 
   const navigateToTimeOffPage = () => {
     navigate(`/dashboard/time-off/create`);
@@ -100,6 +137,14 @@ const ManageLeave = () => {
     fetchRequests();
   }, []);
 
+  // Logic for displaying current requests
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = requests.slice(indexOfFirstRequest, indexOfLastRequest);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -119,7 +164,6 @@ const ManageLeave = () => {
   return (
     <>
       <div className="flex items-center justify-between mb-4">
-        
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -139,7 +183,7 @@ const ManageLeave = () => {
 
       <Card className="w-full">
         <CardHeader>
-          <CardTitle>32 Requests</CardTitle>
+          <CardTitle>{requests.length} Requests</CardTitle>
           <CardDescription>Manage and view Leaves requests.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -149,9 +193,7 @@ const ManageLeave = () => {
             <Badge variant="outline">Rejected 12</Badge>
           </div>
           <Table>
-          
             <TableHeader>
-         
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Duration</TableHead>
@@ -163,14 +205,14 @@ const ManageLeave = () => {
                   <span className="sr-only">Actions</span>
                 </TableHead>
               </TableRow>
-              
-          
             </TableHeader>
-
-
             <TableBody>
-              {requests.map((request) => (
-                <TableRow key={request.id}  className="cursor-pointer hover:bg-gray-100"  onClick={() => navigate(`/dashboard/managetimedetails`)} >
+              {currentRequests.map((request) => (
+                <TableRow
+                  key={request.id}
+                  className="cursor-pointer hover:bg-gray-100"
+                  onClick={() => navigate(`/dashboard/managetimedetails`)}
+                >
                   <TableCell>
                     <div className="flex items-center space-x-2">
                       <Avatar src={request.avatar} alt={request.name} />
@@ -185,7 +227,9 @@ const ManageLeave = () => {
                   <TableCell>{request.type}</TableCell>
                   <TableCell>{request.reason}</TableCell>
                   <TableCell>
-                    <Badge variant={request.approval === "approved" ? "success" : "warning"}>
+                    <Badge
+                      variant={request.approval === "approved" ? "success" : "warning"}
+                    >
                       {request.approval.charAt(0).toUpperCase() + request.approval.slice(1)}
                     </Badge>
                   </TableCell>
@@ -206,9 +250,27 @@ const ManageLeave = () => {
                 </TableRow>
               ))}
             </TableBody>
-              
-             
           </Table>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <Button
+              disabled={currentPage === 1}
+              onClick={() => paginate(currentPage - 1)}
+            >
+              <ChevronLeft />
+              Prev
+            </Button>
+            <span>Page {currentPage} of {Math.ceil(requests.length / requestsPerPage)}</span>
+            <Button
+              disabled={currentPage === Math.ceil(requests.length / requestsPerPage)}
+              onClick={() => paginate(currentPage + 1)}
+            >
+              Next
+
+              <ChevronRight />
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </>
