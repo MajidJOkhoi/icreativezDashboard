@@ -257,16 +257,18 @@ const ManageLeave = () => {
             <Button
               disabled={currentPage === 1}
               onClick={() => paginate(currentPage - 1)}
+              variant="ghost"
             >
               <ChevronLeft />
-              Prev
+             
             </Button>
             <span>Page {currentPage} of {Math.ceil(requests.length / requestsPerPage)}</span>
             <Button
               disabled={currentPage === Math.ceil(requests.length / requestsPerPage)}
               onClick={() => paginate(currentPage + 1)}
+              variant="ghost"
             >
-              Next
+              
 
               <ChevronRight />
             </Button>

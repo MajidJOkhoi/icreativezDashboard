@@ -9,8 +9,17 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
 import { Button } from "@/components/ui/button";
-import { LoaderCircle, MoreHorizontalIcon, PlusCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  ChevronLeft,
+  ChevronRight,
+  LoaderCircle,
+  MoreHorizontalIcon,
+  PlusCircle,
+  Search,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -35,34 +44,25 @@ import {
 } from "@/components/ui/table";
 
 const sampleProjects = [
-  {
-    _id: "1",
-    title: "Project Alpha",
-    genre: "Science Fiction",
-    createdAt: "2023-07-15T14:48:00.000Z",
-    coverImage: "https://via.placeholder.com/50",
-  },
-  {
-    _id: "2",
-    title: "Project Beta",
-    genre: "Fantasy",
-    createdAt: "2023-07-18T09:30:00.000Z",
-    coverImage: "https://via.placeholder.com/50",
-  },
-  {
-    _id: "3",
-    title: "Project Gamma",
-    genre: "Mystery",
-    createdAt: "2023-07-20T12:45:00.000Z",
-    coverImage: "https://via.placeholder.com/50",
-  },
+  { _id: "1", title: "Project Alpha", genre: "Science Fiction", createdAt: "2023-07-15T14:48:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "2", title: "Project Beta", genre: "Fantasy", createdAt: "2023-07-18T09:30:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "3", title: "Project Gamma", genre: "Mystery", createdAt: "2023-07-20T12:45:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "4", title: "Project Delta", genre: "Thriller", createdAt: "2023-07-22T10:30:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "5", title: "Project Epsilon", genre: "Romance", createdAt: "2023-07-25T16:15:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "6", title: "Project Zeta", genre: "Adventure", createdAt: "2023-07-28T08:45:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "7", title: "Project Eta", genre: "Drama", createdAt: "2023-07-30T14:20:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "8", title: "Project Theta", genre: "Horror", createdAt: "2023-08-01T11:50:00.000Z", coverImage: "https://via.placeholder.com/50" },
 ];
+
+const ITEMS_PER_PAGE = 3;
 
 const ManageProject = () => {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState(sampleProjects); // Use sample data
-  const [loading, setLoading] = useState(false); 
+  const [projects, setProjects] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigateToProjectPage = () => {
     navigate(`/dashboard/projects/create`);
@@ -74,16 +74,9 @@ const ManageProject = () => {
         setLoading(true);
         // Commenting out the API request
         // const response = await axios.get('/api/projects');
-   
-        // Use sampleProjects for now
-        // console.log("Fetched projects:", response.data);
-        // if (Array.isArray(response.data)) {
-        //   setProjects(response.data);
-        // } else {
-        //   throw new Error("Data is not an array");
-        // }
 
-        // Using sample data directly
+        // Use sampleProjects for now
+        // setProjects(response.data);
         setProjects(sampleProjects);
       } catch (err) {
         setError("An error occurred while fetching projects.");
@@ -95,6 +88,31 @@ const ManageProject = () => {
 
     fetchProjects();
   }, []);
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const filteredProjects = projects.filter((project) =>
+    project.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
+  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentProjects = filteredProjects.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
 
   if (loading) {
     return (
@@ -132,6 +150,19 @@ const ManageProject = () => {
         </Button>
       </div>
 
+      <div className="flex items-center mt-4 mb-4">
+        <Input
+          type="text"
+          placeholder="Search projects by title"
+          value={searchQuery}
+          onChange={handleSearch}
+          className="flex-grow"
+        />
+        <Button variant="ghost" disabled>
+          <Search />
+        </Button>
+      </div>
+
       <Card className="mt-2 w-full max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle>All Projects</CardTitle>
@@ -155,7 +186,7 @@ const ManageProject = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {projects.map((project) => (
+              {currentProjects.map((project) => (
                 <TableRow key={project._id}>
                   <TableCell className="sm:table-cell">
                     <img
@@ -196,7 +227,27 @@ const ManageProject = () => {
             </TableBody>
           </Table>
         </CardContent>
+      <div className="flex justify-between items-center mt-4 p-4">
+        <Button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          variant="ghost"
+        >
+          <ChevronLeft />
+        </Button>
+        <span className="text-lg">
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          variant="ghost"
+        >
+          <ChevronRight />
+        </Button>
+      </div>
       </Card>
+
     </>
   );
 };

@@ -22,33 +22,45 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
+import logo from "../assets/white.png";
 
 const DashboardLayout = () => {
-//   const token = useTokenStore((state) => state.token);
+  //   const token = useTokenStore((state) => state.token);
 
-//   if (!token) {
-//     return <Navigate to="/auth/login" replace />;
-//   }
+  //   if (!token) {
+  //     return <Navigate to="/auth/login" replace />;
+  //   }
 
   const handleLogout = () => {
     // useTokenStore.setState({ token: "" });
-    console.log(" Logout ")
+    console.log(" Logout ");
   };
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] bg-gray-50">
       <div className="hidden border-r bg-gray-100 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6  bg-slate-800">
+            <Link
+              to="/dashboard/home"
+              className="flex items-center gap-2 font-semibold"
+            >
+              {/* <img
+                src={logo2}
+                alt="Icreativez Logo"
+                className="h-12 w-auto pt-1 "
+              /> */}
+
          
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 bg-white">
-            <Link to="/dashboard/home" className="flex items-center gap-2 font-semibold">
               <img
                 src={logo}
                 alt="Icreativez Logo"
-                className="mr-2 h-10 w-auto pt-1"
+                className=" h-12 rounded-lg w-auto pt-1"
               />
-              <span className="text-[#A22B2D] text-4xl font-extrabold font-serif transition-colors duration-200">
+        
+
+              {/* <span className="text-[#A22B2D] text-4xl font-extrabold font-serif transition-colors duration-200">
                 I
               </span>
               <span className="text-black text-2xl  font-extrabold transition-colors duration-200">
@@ -56,9 +68,8 @@ const DashboardLayout = () => {
               </span>
               <span className="text-[#A22B2D] text-4xl font-serif font-extrabold transition-colors duration-200">
                 Z
-              </span>
+              </span> */}
             </Link>
-        
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -69,13 +80,13 @@ const DashboardLayout = () => {
                 <HomeIcon className="h-5 w-5" />
                 Home
               </Link>
-              
+
               <Link
                 to="/dashboard/books"
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-blue-50 hover:text-blue-600"
               >
                 <Package className="h-4 w-4" />
-                Manage Books 
+                Manage Books
               </Link>
 
               <Link
@@ -103,7 +114,7 @@ const DashboardLayout = () => {
                 to="/dashboard/attendence"
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-blue-50 hover:text-blue-600"
               >
-                < View className="h-4 w-4" />
+                <View className="h-4 w-4" />
                 Manage Attendence
               </Link>
               <Link
@@ -133,7 +144,10 @@ const DashboardLayout = () => {
             <SheetContent side="left" className="flex flex-col bg-white">
               <nav className="grid gap-2 text-lg font-medium">
                 <div className="flex h-14 items-center border-b px-2 lg:h-[60px] lg:px-6 bg-white">
-                  <Link to="/dashboard/home"  className="flex items-center gap-2 font-semibold">
+                  <Link
+                    to="/dashboard/home"
+                    className="flex items-center gap-2 font-semibold"
+                  >
                     <img
                       src={logo}
                       alt="Icreativez Logo"

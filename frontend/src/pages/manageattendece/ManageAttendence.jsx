@@ -37,6 +37,7 @@ import { Avatar } from "@/components/ui/avatar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+// Sample data
 const sampleRequests = [
   {
     id: "1",
@@ -121,7 +122,6 @@ const sampleRequests = [
   },
   // Add more records as needed...
 ];
-
 const ManageAttendance = () => {
   const navigate = useNavigate();
   const [requests, setRequests] = useState(sampleRequests);
@@ -169,7 +169,7 @@ const ManageAttendance = () => {
       );
     }
     if (selectedMonth) {
-      const month = selectedMonth.toLocaleString('default', { month: 'long' });
+      const month = selectedMonth.toLocaleString("default", { month: "long" });
       filtered = filtered.filter((request) => request.month === month);
     }
     setFilteredRequests(filtered);
@@ -264,7 +264,11 @@ const ManageAttendance = () => {
             </TableHeader>
             <TableBody>
               {currentRequests.map((request) => (
-                <TableRow key={request.id} className="cursor-pointer hover:bg-gray-100" onClick={() => navigate(`/dashboard/attendencedetails`)}>
+                <TableRow
+                  key={request.id}
+                  className="cursor-pointer hover:bg-gray-100"
+                  onClick={() => navigate(`/dashboard/attendencedetails`)}
+                >
                   <TableCell>
                     <div className="flex items-center space-x-2">
                       <Avatar src={request.avatar} alt={request.name} />
@@ -278,8 +282,13 @@ const ManageAttendance = () => {
                   <TableCell>{request.jobType}</TableCell>
                   <TableCell>{request.totalLeaves}</TableCell>
                   <TableCell>
-                    <Badge variant={request.approval === "approved" ? "success" : "warning"}>
-                      {request.approval.charAt(0).toUpperCase() + request.approval.slice(1)}
+                    <Badge
+                      variant={
+                        request.approval === "approved" ? "success" : "warning"
+                      }
+                    >
+                      {request.approval.charAt(0).toUpperCase() +
+                        request.approval.slice(1)}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -291,8 +300,20 @@ const ManageAttendance = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/attendance/edit/${request.id}`)}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/attendance/delete/${request.id}`)}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate(`/dashboard/attendance/edit/${request.id}`)
+                          }
+                        >
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate(`/dashboard/attendance/delete/${request.id}`)
+                          }
+                        >
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -326,9 +347,17 @@ const Pagination = ({ requestsPerPage, totalRequests, paginate, currentPage }) =
   return (
     <nav>
       <ul className="flex space-x-2">
-        {pageNumbers.map(number => (
-          <li key={number} className={`page-item ${currentPage === number ? 'font-bold' : ''}`}>
-            <button onClick={() => paginate(number)} className="px-3 py-1 border rounded">
+        {pageNumbers.map((number) => (
+          <li
+            key={number}
+            className={`page-item ${
+              currentPage === number ? "font-bold" : ""
+            }`}
+          >
+            <button
+              onClick={() => paginate(number)}
+              className="px-3 py-1 border rounded"
+            >
               {number}
             </button>
           </li>
@@ -339,3 +368,8 @@ const Pagination = ({ requestsPerPage, totalRequests, paginate, currentPage }) =
 };
 
 export default ManageAttendance;
+
+
+
+
+

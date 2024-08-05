@@ -76,7 +76,7 @@ const TimeOffDetails = () => {
   return (
     <>
       <ToastContainer />
-      <Breadcrumb>
+      <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/dashboard/leaves">Home</BreadcrumbLink>
@@ -88,51 +88,49 @@ const TimeOffDetails = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Card className="max-w-md mx-auto p-6 rounded-lg shadow-lg">
-        <CardHeader className="flex justify-between items-center">
-          <CardTitle>Time off details</CardTitle>
-          <button onClick={() => console.log("Close")} className="text-gray-500">
-            <X size={20} />
-          </button>
+      <Card className="max-w-lg mx-auto p-6 rounded-lg shadow-lg border border-gray-200">
+        <CardHeader className="flex justify-between items-center border-b pb-4">
+          <CardTitle className="text-xl font-semibold">Time Off Details</CardTitle>
+        
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <div className="flex items-center mb-6">
             <img
               src={request.user.image}
               alt={request.user.name}
-              className="w-12 h-12 rounded-full mr-4"
+              className="w-16 h-16 rounded-full border border-gray-300 mr-4"
             />
             <div>
-              <h4 className="font-bold text-lg">{request.user.name}</h4>
-              <p className="text-gray-500">{request.user.role}</p>
+              <h4 className="font-bold text-lg text-gray-800">{request.user.name}</h4>
+              <p className="text-sm text-gray-500">{request.user.role}</p>
             </div>
-            <span className="ml-auto text-yellow-500 font-semibold">
+            <span className={`ml-auto px-3 py-1 rounded-full text-sm font-semibold ${request.status === "Approved" ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-600"}`}>
               {request.status}
             </span>
           </div>
 
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold">Time off type</span>
-              <span>{request.type}</span>
+          <div className="mb-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-gray-700">Time Off Type:</span>
+              <span className="text-gray-800">{request.type}</span>
             </div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold mr-6">Time off date</span>
-              <span>
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-gray-700">Dates:</span>
+              <span className="text-gray-800">
                 {request.startDate} - {request.endDate}
               </span>
             </div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold">Duration</span>
-              <span>{request.duration}</span>
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-gray-700">Duration:</span>
+              <span className="text-gray-800">{request.duration}</span>
             </div>
           </div>
 
           <div className="flex justify-around mt-6">
-            <Button onClick={handleApprove} variant={"ghost"}>
+            <Button onClick={handleApprove} variant="success" className="w-full mx-1">
               Approve
             </Button>
-            <Button onClick={handleReject} variant={"destructive"}>
+            <Button onClick={handleReject} variant="destructive" className="w-full mx-1">
               Reject
             </Button>
           </div>
