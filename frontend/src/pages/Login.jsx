@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,18 +6,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from "@/auth/AuthContext";
+import { useAuth } from '@/auth/AuthContext';
 
 const Login = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -28,25 +28,25 @@ const Login = () => {
     const password = passwordRef.current.value;
 
     try {
-      const response = await fetch("http://localhost:3000/api/v1/users/login", {
-        method: "POST",
+      const response = await fetch('/api/user/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        toast.success("Login successful");
-        login(data.user); 
-        navigate("/Home");
+        login(data.token);
+        toast.success('Login successful');
+        navigate('/dashboard/home');
       } else {
         const errorData = await response.json();
-        toast.warning(errorData.message || "Invalid email or password");
+        toast.warning(errorData.message || 'Invalid email or password');
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
+      toast.error('An error occurred. Please try again.');
     }
   };
 
@@ -61,30 +61,14 @@ const Login = () => {
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
               <label htmlFor="email">Email</label>
-              <Input
-                ref={emailRef}
-                id="email"
-                type="email"
-                name="email"
-                placeholder="m@example.com"
-                required
-              />
+              <Input ref={emailRef} id="email" type="email" name="email" placeholder="m@example.com" required />
             </div>
             <div className="grid gap-2">
               <label htmlFor="password">Password</label>
-              <Input
-                ref={passwordRef}
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Password"
-                required
-              />
+              <Input ref={passwordRef} id="password" type="password" name="password" placeholder="Password" required />
             </div>
           </CardContent>
-          {errorMessage && (
-            <p className="text-red-500 text-center">{errorMessage}</p>
-          )}
+          {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
           <CardFooter className="flex justify-center gap-2">
             <Button className="-w-sm" type="submit">
               <span className="ml-2">Log In</span>
@@ -93,7 +77,7 @@ const Login = () => {
         </form>
         <div className="mb-4 text-center text-sm">
           Don't have an account?
-          <Link to="/signup" className="-underline font-bold ml-1">
+          <Link to="/auth/signup" className="-underline font-bold ml-1">
             Sign up
           </Link>
         </div>

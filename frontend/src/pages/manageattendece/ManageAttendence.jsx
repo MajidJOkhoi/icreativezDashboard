@@ -212,10 +212,10 @@ const ManageAttendance = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Button onClick={navigateToTimeOffPage}>
+        {/* <Button onClick={navigateToTimeOffPage}>
           <PlusCircle size={20} />
-          <span className="ml-2">Add Time Off</span>
-        </Button>
+         ? <span className="ml-2">Add Time Off</span>
+        </Button> */}
       </div>
 
       <div className="flex items-center justify-between mb-4 space-x-2">

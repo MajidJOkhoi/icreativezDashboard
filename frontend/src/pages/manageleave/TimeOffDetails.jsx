@@ -104,7 +104,7 @@ const TimeOffDetails = () => {
               <h4 className="font-bold text-lg text-gray-800">{request.user.name}</h4>
               <p className="text-sm text-gray-500">{request.user.role}</p>
             </div>
-            <span className={`ml-auto px-3 py-1 rounded-full text-sm font-semibold ${request.status === "Approved" ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-600"}`}>
+            <span className={`ml-auto px-4 py-1 rounded-full text-sm font-semibold ${request.status === "Approved" ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-600"}`}>
               {request.status}
             </span>
           </div>
@@ -127,10 +127,10 @@ const TimeOffDetails = () => {
           </div>
 
           <div className="flex justify-around mt-6">
-            <Button onClick={handleApprove} variant="success" className="w-full mx-1">
+            <Button onClick={handleApprove} variant="ghost" className="w-full mx-1">
               Approve
             </Button>
-            <Button onClick={handleReject} variant="destructive" className="w-full mx-1">
+            <Button onClick={handleReject} variant="ghost" className="w-full mx-1">
               Reject
             </Button>
           </div>
