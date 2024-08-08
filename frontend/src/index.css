@@ -58,3 +58,23 @@
     --chart-5: 340 75% 55%;
   }
 }
+
+
+.status-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+}
+
+.status-present {
+  background-color: green;
+}
+
+.status-absent {
+  background-color: red;
+}

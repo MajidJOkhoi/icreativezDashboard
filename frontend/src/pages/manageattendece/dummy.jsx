@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { LoaderCircle, MoreHorizontalIcon, CalendarIcon } from "lucide-react";
+import { LoaderCircle, MoreHorizontalIcon, PlusCircle, CalendarIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -52,45 +52,12 @@ const ManageAttendance = () => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/api/user/getMyAllUsers");
-        if (response.data && response.data.myUsers) {
-          const formattedData = response.data.myUsers.map((user) => ({
-            _id: user._id,
-            fullName: user.fullName || "Unknown",
-            address: user.address || "Unknown",
-            companyId: user.companyId || "N/A",
-            contact: user.contact || "N/A",
-           
-            designation: {
-              1: "Administrator",
-              2: "Senior Web Developer",
-              3: "Junior Web Developer",
-              4: "Senior Flutter Developer",
-              5: "Junior Flutter Developer",
-              6: "Senior Python Developer",
-              7: "Junior Python Developer",
-              8: "Senior SEO Expert",
-              9: "Senior SEO Expert",
-            }[user.designation] || "N/A",
+        const response = await axios.get('/api/attendance/getUsersAttendance');
+        console.log(response.data);
 
-
-            email: user.email || "N/A",
-            jobType: {
-              1: "Full Time",
-              2: "Part Time",
-              3: "Full Time Intern",
-              4: "Part Time Intern"
-            }[user.jobType] || "N/A",
-            role: {
-              1: "Admin",
-              2: "Team Lead",
-              3: "User"
-            }[user.role] || "N/A",
-            status: user.status ? "present" : "absent",
-          }));
-          
-          setRequests(formattedData);
-          setFilteredRequests(formattedData);
+        if (response.data && response.data.usersAttendance) {
+          setRequests(response.data.usersAttendance);
+          setFilteredRequests(response.data.usersAttendance);
         } else {
           setError("No data found");
         }
@@ -101,7 +68,6 @@ const ManageAttendance = () => {
         setLoading(false);
       }
     };
-    
 
     fetchRequests();
   }, []);
@@ -114,34 +80,29 @@ const ManageAttendance = () => {
     let filtered = requests;
     if (searchName) {
       filtered = filtered.filter((request) =>
-        request.fullName.toLowerCase().includes(searchName.toLowerCase())
-        
+        request.user.fullName.toLowerCase().includes(searchName.toLowerCase())
       );
     }
     if (selectedMonth) {
       const month = selectedMonth.toLocaleString("default", { month: "long" });
-      filtered = filtered.filter(
-        (request) =>
-          new Date(request.date).toLocaleString("default", { month: "long" }) ===
-          month
+      filtered = filtered.filter((request) =>
+        new Date(request.date).toLocaleString("default", { month: "long" }) === month
       );
     }
     setFilteredRequests(filtered);
   };
 
+  // Pagination logic
   const indexOfLastRequest = currentPage * requestsPerPage;
   const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
-  const currentRequests = filteredRequests.slice(
-    indexOfFirstRequest,
-    indexOfLastRequest
-  );
+  const currentRequests = filteredRequests.slice(indexOfFirstRequest, indexOfLastRequest);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <LoaderCircle className="h-10 w-10 text-green-600 animate-spin" />
+        <LoaderCircle className="h-10 w-10 animate-spin" />
       </div>
     );
   }
@@ -168,6 +129,10 @@ const ManageAttendance = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+        {/* <Button onClick={navigateToTimeOffPage}>
+          <PlusCircle size={20} />
+          <span className="ml-2">Add Time Off</span>
+        </Button> */}
       </div>
 
       <div className="flex items-center justify-between mb-4 space-x-2">
@@ -178,7 +143,7 @@ const ManageAttendance = () => {
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
-        {/* <div className="relative">
+        <div className="relative">
           <DatePicker
             selected={selectedMonth}
             onChange={(date) => setSelectedMonth(date)}
@@ -191,26 +156,22 @@ const ManageAttendance = () => {
             size={24}
             className="absolute top-2 right-2 text-gray-500 pointer-events-none"
           />
-        </div> */}
+        </div>
       </div>
 
       <Card className="w-full">
         <CardHeader>
-          <CardTitle>View List Of All Users </CardTitle>
-          <CardDescription className='text-red-500'> To Check Attadence Report Click User Record .</CardDescription>
+          <CardTitle>View Attendance Report</CardTitle>
+          <CardDescription>Manage and view attendance requests.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>Company ID</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Designation</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Job Type</TableHead>
-                <TableHead>Role</TableHead>
+                <TableHead>Check-In Time</TableHead>
+                <TableHead>Check-Out Time</TableHead>
+                <TableHead>Duration</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
@@ -222,32 +183,28 @@ const ManageAttendance = () => {
                 <TableRow
                   key={request._id}
                   className="cursor-pointer hover:bg-gray-100"
-                  onClick={() =>
-                    navigate(`/dashboard/attendencedetails/${request._id}`)
-                  }
+                  onClick={() => navigate(`/dashboard/attendencedetails/${request._id}`)}
                 >
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <Avatar
-                        src="https://via.placeholder.com/50"
-                        alt={request.fullName || "User"}
-                      />
+                      <Avatar src="https://via.placeholder.com/50" alt={request.user.fullName || "User"} />
                       <div>
-                        <div className="font-medium">{request.fullName}</div>
+                        <div className="font-medium">{request.user.fullName || "User"}</div>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{request.address}</TableCell>
-                  <TableCell>{request.companyId}</TableCell>
-                  <TableCell>{request.contact}</TableCell>
-                  <TableCell>{request.designation}</TableCell>
-                  <TableCell>{request.email}</TableCell>
-                  <TableCell>{request.jobType}</TableCell>
-                  <TableCell>{request.role}</TableCell>
+                  <TableCell>{request.checkIn?.time || "N/A"}</TableCell>
+                  <TableCell>{request.checkOut?.time || "N/A"}</TableCell>
                   <TableCell>
-                    
+                    {request.duration
+                      ? `${request.duration.hours}h ${request.duration.minutes}m ${request.duration.seconds}s`
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell>
                     <Badge
-                      variant={request.status === "present" ? "success" : "ghost"}
+                      variant={
+                        request.status === "present" ? "success" : "warning"
+                      }
                     >
                       {request.status}
                     </Badge>
@@ -263,19 +220,17 @@ const ManageAttendance = () => {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                          onClick={() =>
-                            navigate(`/dashboard/attendencedetails/${request._id}`)
-                          }
+                          onClick={() => navigate(`/dashboard/attendencedetails/${request._id}`)}
                         >
                           View
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => alert(`Edit ${request.fullName}`)}
+                          onClick={() => alert(`Edit ${request.user.fullName}`)}
                         >
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => alert(`Delete ${request.fullName}`)}
+                          onClick={() => alert(`Delete ${request.user.fullName}`)}
                         >
                           Delete
                         </DropdownMenuItem>
@@ -291,16 +246,19 @@ const ManageAttendance = () => {
           <div className="flex justify-center mt-4">
             <nav>
               <ul className="flex space-x-2">
-                {Array.from(
-                  { length: Math.ceil(filteredRequests.length / requestsPerPage) },
+                {Array.from({ length: Math.ceil(filteredRequests.length / requestsPerPage) }).map(
                   (_, index) => (
                     <li key={index}>
-                      <Button
-                        variant={currentPage === index + 1 ? "primary" : "outline"}
+                      <button
                         onClick={() => paginate(index + 1)}
+                        className={`px-3 py-1 rounded ${
+                          currentPage === index + 1
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-200 text-gray-700"
+                        }`}
                       >
                         {index + 1}
-                      </Button>
+                      </button>
                     </li>
                   )
                 )}
@@ -314,5 +272,3 @@ const ManageAttendance = () => {
 };
 
 export default ManageAttendance;
-
-

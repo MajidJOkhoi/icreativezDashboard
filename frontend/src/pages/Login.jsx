@@ -38,6 +38,7 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         login(data.token);
         toast.success('Login successful');
         navigate('/dashboard/home');

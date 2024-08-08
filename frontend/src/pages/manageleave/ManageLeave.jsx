@@ -35,80 +35,9 @@ import {
 } from "@/components/ui/table";
 import { Avatar } from "@/components/ui/avatar";
 
-// Sample requests array for testing purposes
-const sampleRequests = [
-  {
-    id: "1",
-    name: "Ivan Bryant",
-    role: "Product Designer",
-    duration: "3 days",
-    date: "23rd - 25th Aug 2022",
-    type: "Sick Leave",
-    reason: "Sick Leave",
-    approval: "pending",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    id: "2",
-    name: "Jack Dylen",
-    role: "UI/UX Designer",
-    duration: "2 days",
-    date: "26th - 27th Aug 2022",
-    type: "PTO",
-    reason: "Personal Time Off",
-    approval: "pending",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    id: "3",
-    name: "Jamie Blue",
-    role: "Project Manager",
-    duration: "1 day",
-    date: "27th Aug 2022",
-    type: "Parent Duty",
-    reason: "Parent Duty",
-    approval: "approved",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    id: "4",
-    name: "Ivan Bryant",
-    role: "Product Designer",
-    duration: "3 days",
-    date: "23rd - 25th Aug 2022",
-    type: "Sick Leave",
-    reason: "Sick Leave",
-    approval: "pending",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    id: "5",
-    name: "Jack Dylen",
-    role: "UI/UX Designer",
-    duration: "2 days",
-    date: "26th - 27th Aug 2022",
-    type: "PTO",
-    reason: "Personal Time Off",
-    approval: "pending",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    id: "6",
-    name: "Jamie Blue",
-    role: "Project Manager",
-    duration: "1 day",
-    date: "27th Aug 2022",
-    type: "Parent Duty",
-    reason: "Parent Duty",
-    approval: "approved",
-    avatar: "https://via.placeholder.com/50",
-  },
-  // Add more sample requests as needed
-];
-
 const ManageLeave = () => {
   const navigate = useNavigate();
-  const [requests, setRequests] = useState(sampleRequests);
+  const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,10 +51,28 @@ const ManageLeave = () => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        // Fetch data here, currently using sample data
-        // const response = await axios.get('/api/requests');
-        // setRequests(response.data);
-        setRequests(sampleRequests); // Use sample data directly
+        const response = await axios.get('/api/leave/getAllLeaves');
+        console.log(response.data);
+        const data = response.data.allLeaves.map((leave) => ({
+          id: leave._id,
+          
+          teamhead_id : leave.teamHead._id,
+          teamhead : leave.teamHead.fullName,
+
+          userid:leave.user._id,
+
+          name: leave.user.fullName,
+          role: leave.user.email,
+          duration: `${leave.totalDays} days`,
+          date: `${leave.intialDate} - ${leave.endDate}`,
+          type: "Leave",
+          reason: leave.description,
+          approval: "pending", // assuming approval status isn't provided by API
+          avatar: "https://via.placeholder.com/50", // replace with actual avatar if available
+        }));
+        setRequests(data);
+       
+        
       } catch (err) {
         setError("An error occurred while fetching Leaves requests.");
         console.error(err);
@@ -148,7 +95,7 @@ const ManageLeave = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <LoaderCircle className="h-10 w-10 animate-spin" />
+        <LoaderCircle className="h-10 w-10 text-green-500 animate-spin" />
       </div>
     );
   }
@@ -175,27 +122,28 @@ const ManageLeave = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Button onClick={navigateToTimeOffPage}>
+        {/* <Button onClick={navigateToTimeOffPage}>
           <PlusCircle size={20} />
           <span className="ml-2">Add Time Off</span>
-        </Button>
+        </Button> */}
       </div>
 
       <Card className="w-full">
         <CardHeader>
           <CardTitle>{requests.length} Requests</CardTitle>
-          <CardDescription>Manage and view Leaves requests.</CardDescription>
+          <CardDescription>Manage and view Leaves <span className="text-red-500"> Click Record  </span> For More Details .</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex space-x-4 mb-4">
+          {/* <div className="flex space-x-4 mb-4">
             <Badge variant="outline">Pending 12</Badge>
             <Badge variant="outline">Approved 12</Badge>
             <Badge variant="outline">Rejected 12</Badge>
-          </div>
+          </div> */}
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
+                <TableHead> Team Head </TableHead>
                 <TableHead>Duration</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Type</TableHead>
@@ -209,9 +157,9 @@ const ManageLeave = () => {
             <TableBody>
               {currentRequests.map((request) => (
                 <TableRow
-                  key={request.id}
+                  key={request.userid}
                   className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => navigate(`/dashboard/managetimedetails`)}
+                  onClick={() => navigate(`/dashboard/managetimedetails/${request.userid}`)}
                 >
                   <TableCell>
                     <div className="flex items-center space-x-2">
@@ -222,6 +170,7 @@ const ManageLeave = () => {
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell> {request.teamhead} </TableCell>
                   <TableCell>{request.duration}</TableCell>
                   <TableCell>{request.date}</TableCell>
                   <TableCell>{request.type}</TableCell>
@@ -242,8 +191,8 @@ const ManageLeave = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/Leaves/edit/${request.id}`)}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/Leaves/delete/${request.id}`)}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(`/dashboard/Leaves/edit/${request._id}`)}>Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(`/dashboard/Leaves/delete/${request._id}`)}>Delete</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -260,7 +209,6 @@ const ManageLeave = () => {
               variant="ghost"
             >
               <ChevronLeft />
-             
             </Button>
             <span>Page {currentPage} of {Math.ceil(requests.length / requestsPerPage)}</span>
             <Button
@@ -268,8 +216,6 @@ const ManageLeave = () => {
               onClick={() => paginate(currentPage + 1)}
               variant="ghost"
             >
-              
-
               <ChevronRight />
             </Button>
           </div>

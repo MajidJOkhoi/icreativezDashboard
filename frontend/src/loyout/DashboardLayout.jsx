@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "react-toastify"; // Make sure to import toast
-import logo from "../assets/white.png";
+import logo from "../assets/logo.png";
 
 const DashboardLayout = () => {
   const { logout } = useAuth();
@@ -56,7 +56,7 @@ const DashboardLayout = () => {
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] bg-gray-50">
       <div className="hidden border-r bg-gray-100 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 bg-gray-500">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 bg-slate-600">
             <Link to="/dashboard/home" className="flex items-center gap-2 font-semibold">
               <img src={logo} alt="Logo" className="h-12 rounded-lg w-auto pt-1" />
             </Link>

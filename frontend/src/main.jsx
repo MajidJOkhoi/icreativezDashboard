@@ -27,10 +27,11 @@ import AddTimeOff from "./pages/manageleave/AddTimeOff";
 import TimeOffDetails from "./pages/manageleave/TimeOffDetails";
 import CheckPerformance from "./pages/manageperformance/CheckPerformance";
 
+
 const router = createBrowserRouter([
   {
     path: "/dashboard",
-    element: <ProtectedRoute />,
+    // element: <ProtectedRoute />,
     children: [
       {
         path: "/dashboard",
@@ -49,14 +50,18 @@ const router = createBrowserRouter([
           { path: "team", element: <ManageTeam /> },
           { path: "team/create", element: <AddUser /> },
           // manage leaves
+         
           { path: "leaves", element: <ManageLeave /> },
           { path: "time-off/create", element: <AddTimeOff /> },
-          { path: "managetimedetails", element: <TimeOffDetails /> },
+          { path: "managetimedetails/:id", element: <TimeOffDetails /> },
+
+
           // manage attendance
           { path: "attendance", element: <ManageAttendance /> },
+          { path: "attendencedetails/:id", element: <AttendanceDetails /> },
+
           // performance evaluation
           { path: "performance", element: <CheckPerformance /> },
-          { path: "attendancedetails", element: <AttendanceDetails /> },
         ],
       },
     ],
