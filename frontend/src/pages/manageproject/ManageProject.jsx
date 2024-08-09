@@ -144,9 +144,9 @@ const ManageProject = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Button onClick={navigateToProjectPage}>
+        <Button onClick={navigateToProjectPage} className='rounded-3xl bg-[#BA0D09] hover:bg-[#BA0D09]  '>
           <PlusCircle size={20} />
-          <span className="ml-2">Add Project</span>
+          <span className="ml-2 ">Add Project</span>
         </Button>
       </div>
 
@@ -156,14 +156,13 @@ const ManageProject = () => {
           placeholder="Search projects by title"
           value={searchQuery}
           onChange={handleSearch}
-          className="flex-grow"
-        />
-        <Button variant="ghost" disabled>
-          <Search />
-        </Button>
+          className="flex-grow rounded-3xl"
+          
+          />
+        
       </div>
 
-      <Card className="mt-2 w-full max-w-sm sm:max-w-full">
+      <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle>All Projects</CardTitle>
           <CardDescription>

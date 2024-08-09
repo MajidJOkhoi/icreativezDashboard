@@ -54,7 +54,7 @@ const ManageTeam = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(5);
+  const pageSize = 5; // Show 5 users per page
 
   const totalPages = Math.ceil(filteredUsers.length / pageSize);
   const paginatedUsers = filteredUsers.slice(
@@ -109,7 +109,7 @@ const ManageTeam = () => {
         jobType: "Full Time",
         role: "Admin",
         designation: "Senior Web Developer",
-        companyId: "Company1"
+        companyId: "Company1",
       },
       {
         _id: "2",
@@ -120,7 +120,51 @@ const ManageTeam = () => {
         jobType: "Part Time",
         role: "User",
         designation: "Junior Web Developer",
-        companyId: "Company2"
+        companyId: "Company2",
+      },
+      {
+        _id: "2",
+        fullName: "Jane Smith",
+        email: "jane.smith@example.com",
+        contact: "098-765-4321",
+        address: "456 Oak St, Anytown, USA",
+        jobType: "Part Time",
+        role: "User",
+        designation: "Junior Web Developer",
+        companyId: "Company2",
+      },
+      {
+        _id: "2",
+        fullName: "Jane Smith",
+        email: "jane.smith@example.com",
+        contact: "098-765-4321",
+        address: "456 Oak St, Anytown, USA",
+        jobType: "Part Time",
+        role: "User",
+        designation: "Junior Web Developer",
+        companyId: "Company2",
+      },
+      {
+        _id: "2",
+        fullName: "Jane Smith",
+        email: "jane.smith@example.com",
+        contact: "098-765-4321",
+        address: "456 Oak St, Anytown, USA",
+        jobType: "Part Time",
+        role: "User",
+        designation: "Junior Web Developer",
+        companyId: "Company2",
+      },
+      {
+        _id: "2",
+        fullName: "Jane Smith",
+        email: "jane.smith@example.com",
+        contact: "098-765-4321",
+        address: "456 Oak St, Anytown, USA",
+        jobType: "Part Time",
+        role: "User",
+        designation: "Junior Web Developer",
+        companyId: "Company2",
       },
       // Add more sample data as needed
     ];
@@ -130,13 +174,14 @@ const ManageTeam = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = users.filter((user) =>
-      user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.jobType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.contact.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.companyId.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = users.filter(
+      (user) =>
+        user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.jobType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.contact.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.companyId.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredUsers(filtered);
     setCurrentPage(1);
@@ -172,7 +217,7 @@ const ManageTeam = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Button onClick={navigateToCreateUser}>
+        <Button onClick={navigateToCreateUser} className="rounded-3xl bg-[#BA0D09] hover:bg-[#BA0D09] hover:text-white">
           <PlusCircle size={20} />
           <span className="ml-2">Add User</span>
         </Button>
@@ -185,11 +230,11 @@ const ManageTeam = () => {
           placeholder="Search by name, email, role, job type, contact, or company ID"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full max-w-md"
+          className="flex-grow rounded-3xl"
         />
       </div>
 
-      <Card className="mt-2 w-full max-w-sm sm:max-w-full">
+      <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle>All Users</CardTitle>
           <CardDescription>
@@ -250,14 +295,15 @@ const ManageTeam = () => {
               ))}
             </TableBody>
           </Table>
+
           {/* Pagination Controls */}
           <div className="flex items-center justify-between mt-4">
             <Button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
+              variant="ghost"
             >
               <ChevronLeft />
-              Prev
             </Button>
             <div>
               Page {currentPage} of {totalPages}
@@ -265,8 +311,8 @@ const ManageTeam = () => {
             <Button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
+              variant="ghost"
             >
-              Next
               <ChevronRight />
             </Button>
           </div>

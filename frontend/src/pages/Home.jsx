@@ -41,7 +41,7 @@ const Home = () => {
       progress: 60,
       color: "green",
       link: "/dashboard/team",
-      icon: <Clipboard className="text-green-400" />,
+      icon: <Clipboard className="text-green-400 h-8 w-8" />,
     },
     {
       title: "Active Projects",
@@ -50,7 +50,7 @@ const Home = () => {
       progress: 75,
       color: "blue",
       link: "/dashboard/projects",
-      icon: <User className="text-blue-400" />,
+      icon: <User className="text-blue-400 h-8 w-8" />,
     },
     {
       title: "Attendance",
@@ -59,7 +59,7 @@ const Home = () => {
       progress: present,
       color: "purple",
       link: "/dashboard/attendance",
-      icon: <Eye className="text-purple-400" />,
+      icon: <Eye className="text-purple-400 h-8 w-8 " />,
     },
     {
       title: "Leaves Taken",
@@ -68,7 +68,7 @@ const Home = () => {
       progress: 25,
       color: "orange",
       link: "/dashboard/leaves",
-      icon: <Calendar className="text-orange-400" />,
+      icon: <Calendar className="text-orange-400 h-8 w-8" />,
     },
     {
       title: "Pending Tasks",
@@ -77,7 +77,7 @@ const Home = () => {
       progress: 45,
       color: "red",
       link: "/dashboard/performance",
-      icon: <FileText className="text-red-400" />,
+      icon: <FileText className="text-red-400 h-8 w-8 " />,
     },
     {
       title: "Completed Tasks",
@@ -86,7 +86,7 @@ const Home = () => {
       progress: 50,
       color: "yellow",
       link: "/dashboard/performance",
-      icon: <Star className="text-yellow-400" />,
+      icon: <Star className="text-yellow-400 h-8 w-8 " />,
     },
   ];
 
@@ -94,14 +94,14 @@ const Home = () => {
     <div className="grid grid-cols-1 gap-6 p-8 sm:grid-cols-2 lg:grid-cols-3">
       {cardsData.map((card, index) => (
         <Link to={card.link} key={index}>
-          <Card className="rounded-3xl p-4">
+          <Card className="rounded-3xl p-4 border-2">
             <CardHeader className="flex flex-col items-center">
               <CardTitle className="text-2xl font-semibold  mb-2">{card.title}</CardTitle>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center ">
                 {card.icon}
               </div>
               <div className="flex items-center justify-center space-x-2">
-                <span className="text-3xl font-bold font-">{card.value}</span>
+                <span className="text-3xl font-bold text-[#BA0D09]">{card.value}</span>
               </div>
             </CardHeader>
             <CardContent>

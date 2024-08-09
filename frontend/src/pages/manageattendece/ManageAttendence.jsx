@@ -174,7 +174,7 @@ const ManageAttendance = () => {
         <input
           type="text"
           placeholder="Search by name"
-          className="border p-2 rounded w-3/6"
+          className="border p-2 rounded-3xl flex-grow"
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
@@ -194,7 +194,7 @@ const ManageAttendance = () => {
         </div> */}
       </div>
 
-      <Card className="w-full">
+      <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle>View List Of All Users </CardTitle>
           <CardDescription className='text-red-500'> To Check Attadence Report Click User Record .</CardDescription>
@@ -221,7 +221,7 @@ const ManageAttendance = () => {
               {currentRequests.map((request) => (
                 <TableRow
                   key={request._id}
-                  className="cursor-pointer hover:bg-gray-100"
+                  className="cursor-pointer hover:bg-gray-50 rounded-3xl"
                   onClick={() =>
                     navigate(`/dashboard/attendencedetails/${request._id}`)
                   }
@@ -245,12 +245,17 @@ const ManageAttendance = () => {
                   <TableCell>{request.jobType}</TableCell>
                   <TableCell>{request.role}</TableCell>
                   <TableCell>
+
+
+                  <Badge
+                        className={`inline-block px-2 py-1 rounded-full text-sm font-semibold text-white hover:bg-gray-500  ${
+                          request.status === "present" ? "bg-green-500" : "bg-red-500"
+                        }`}
+                      >
+                        {request.status === "present" ? "Present" : "Absent"}
+                  </Badge>
                     
-                    <Badge
-                      variant={request.status === "present" ? "success" : "ghost"}
-                    >
-                      {request.status}
-                    </Badge>
+                   
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>

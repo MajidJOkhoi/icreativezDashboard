@@ -97,23 +97,23 @@ const CreateProject = () => {
                     Projects
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator />
+              
              
               </BreadcrumbList>
             </Breadcrumb>
             <div className="flex items-center gap-4">
               <Link to="/dashboard/projects">
-                <Button variant={"outline"}>
-                  <span className="ml-2">Cancel</span>
+                <Button variant={"outline"}  className="rounded-3xl hover:bg-yellow-500 hover:text-white hover:rounded-3xl">
+                  <span >Cancel</span>
                 </Button>
               </Link>
-              <Button type="submit">
+              <Button type="submit"  className="rounded-3xl bg-[#BA0D09] hover:bg-[#BA0D09] hover:text-white hover:rounded-3xl">
                
-                <span className="ml-2">Submit</span>
+                <span>Submit</span>
               </Button>
             </div>
           </div>
-          <Card className="mt-6">
+          <Card className="mt-4 pb-8 rounded-3xl shadow-sm shadow-green-50 ">
             <CardHeader>
               <CardTitle>Create a new Project</CardTitle>
               <CardDescription>
@@ -129,7 +129,7 @@ const CreateProject = () => {
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} className='rounded-3xl ' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -142,7 +142,7 @@ const CreateProject = () => {
                     <FormItem>
                       <FormLabel>Genre</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} className='rounded-3xl' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -155,7 +155,7 @@ const CreateProject = () => {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} className='rounded-xl'  />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -168,7 +168,7 @@ const CreateProject = () => {
                     <FormItem>
                       <FormLabel>Cover Image</FormLabel>
                       <FormControl>
-                        <Input type="file" {...field} ref={coverImageRef} />
+                        <Input type="file" {...field} ref={coverImageRef} className='rounded-3xl'  />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -181,19 +181,21 @@ const CreateProject = () => {
                     <FormItem>
                       <FormLabel>File</FormLabel>
                       <FormControl>
-                        <Input type="file" {...field} ref={fileRef} />
+                        <Input type="file" {...field} ref={fileRef} className='rounded-3xl hover'  />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
+               
                   control={form.control}
                   name="assignedTo"
+               
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Assigned To</FormLabel>
-                      <FormControl>
+                      <FormControl >
                         <Select
                           isMulti
                           options={teamMembersList}
@@ -203,12 +205,14 @@ const CreateProject = () => {
                             )
                           )}
                           onChange={(selected) =>
+                      
                             form.setValue(
                               "assignedTo",
                               selected.map((opt) => opt.value)
                             )
                           }
                           placeholder="Select team members"
+                          
                         />
                       </FormControl>
                       <FormMessage />

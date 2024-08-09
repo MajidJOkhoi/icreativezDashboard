@@ -6,7 +6,12 @@ const Layout = () => {
 
   return (
     <>
+
+
       <Outlet />
+
+  
+      
     </>
   );
 };

@@ -128,7 +128,7 @@ const ManageLeave = () => {
         </Button> */}
       </div>
 
-      <Card className="w-full">
+      <Card className="w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle>{requests.length} Requests</CardTitle>
           <CardDescription>Manage and view Leaves <span className="text-red-500"> Click Record  </span> For More Details .</CardDescription>

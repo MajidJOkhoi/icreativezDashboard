@@ -102,15 +102,15 @@ const AddUser = () => {
         </Breadcrumb>
         <div className="flex gap-4">
           <Link to="/dashboard/team">
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" className='hover:bg-yellow-500 rounded-3xl'>Cancel</Button>
           </Link>
-          <Button type="submit" onClick={handleSubmit(onSubmit)}>
+          <Button type="submit"  className="bg-[#BA0D09] hover:bg-[#BA0D09] rounded-3xl" onClick={handleSubmit(onSubmit)}>
             Submit
           </Button>
         </div>
       </div>
 
-      <Card>
+      <Card className="mt-4 pb-8 rounded-3xl shadow-sm shadow-green-50 ">
         <CardHeader>
           <CardTitle>Create a new User</CardTitle>
           <CardDescription>
