@@ -44,11 +44,11 @@ import {
 } from "@/components/ui/table";
 
 const sampleProjects = [
-  { _id: "1", title: "Project Alpha", genre: "Science Fiction", createdAt: "2023-07-15T14:48:00.000Z", coverImage: "https://via.placeholder.com/50" },
-  { _id: "2", title: "Project Beta", genre: "Fantasy", createdAt: "2023-07-18T09:30:00.000Z", coverImage: "https://via.placeholder.com/50" },
-  { _id: "3", title: "Project Gamma", genre: "Mystery", createdAt: "2023-07-20T12:45:00.000Z", coverImage: "https://via.placeholder.com/50" },
-  { _id: "4", title: "Project Delta", genre: "Thriller", createdAt: "2023-07-22T10:30:00.000Z", coverImage: "https://via.placeholder.com/50" },
-  { _id: "5", title: "Project Epsilon", genre: "Romance", createdAt: "2023-07-25T16:15:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "1", title: "Project Alpha", genre: "Ai", createdAt: "2023-07-15T14:48:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "2", title: "Project Beta", genre: "Ds", createdAt: "2023-07-18T09:30:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "3", title: "Project Gamma", genre: "Tech", createdAt: "2023-07-20T12:45:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "4", title: "Project Delta", genre: "Bs", createdAt: "2023-07-22T10:30:00.000Z", coverImage: "https://via.placeholder.com/50" },
+  { _id: "5", title: "Project Epsilon", genre: "Ai", createdAt: "2023-07-25T16:15:00.000Z", coverImage: "https://via.placeholder.com/50" },
   { _id: "6", title: "Project Zeta", genre: "Adventure", createdAt: "2023-07-28T08:45:00.000Z", coverImage: "https://via.placeholder.com/50" },
   { _id: "7", title: "Project Eta", genre: "Drama", createdAt: "2023-07-30T14:20:00.000Z", coverImage: "https://via.placeholder.com/50" },
   { _id: "8", title: "Project Theta", genre: "Horror", createdAt: "2023-08-01T11:50:00.000Z", coverImage: "https://via.placeholder.com/50" },
@@ -198,7 +198,7 @@ const ManageProject = () => {
                   </TableCell>
                   <TableCell className="font-medium">{project.title}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{project.genre}</Badge>
+                    <Badge variant="outline" className='bg-green-300 shadow-sm rounded-xl'>{project.genre}</Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {new Date(project.createdAt).toLocaleDateString()}

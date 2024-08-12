@@ -53,6 +53,7 @@ const ManageAttendance = () => {
       try {
         setLoading(true);
         const response = await axios.get("/api/user/getMyAllUsers");
+        console.log(response.data.myUsers)
         if (response.data && response.data.myUsers) {
           const formattedData = response.data.myUsers.map((user) => ({
             _id: user._id,
@@ -86,7 +87,7 @@ const ManageAttendance = () => {
               2: "Team Lead",
               3: "User"
             }[user.role] || "N/A",
-            status: user.status ? "present" : "absent",
+          
           }));
           
           setRequests(formattedData);
@@ -203,6 +204,7 @@ const ManageAttendance = () => {
           <Table>
             <TableHeader>
               <TableRow>
+        
                 <TableHead>Name</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Company ID</TableHead>
@@ -211,7 +213,7 @@ const ManageAttendance = () => {
                 <TableHead>Email</TableHead>
                 <TableHead>Job Type</TableHead>
                 <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
+                
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -244,19 +246,7 @@ const ManageAttendance = () => {
                   <TableCell>{request.email}</TableCell>
                   <TableCell>{request.jobType}</TableCell>
                   <TableCell>{request.role}</TableCell>
-                  <TableCell>
-
-
-                  <Badge
-                        className={`inline-block px-2 py-1 rounded-full text-sm font-semibold text-white hover:bg-gray-500  ${
-                          request.status === "present" ? "bg-green-500" : "bg-red-500"
-                        }`}
-                      >
-                        {request.status === "present" ? "Present" : "Absent"}
-                  </Badge>
-                    
-                   
-                  </TableCell>
+                
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

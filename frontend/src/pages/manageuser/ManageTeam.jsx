@@ -266,10 +266,10 @@ const ManageTeam = () => {
                   <TableCell>{user.contact}</TableCell>
                   <TableCell>{user.address}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{user.jobType}</Badge>
+                    <Badge variant="outline" className='bg-green-300 shadow-sm rounded-xl'>{user.jobType}</Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline">{user.role}</Badge>
+                    <Badge variant="outline" className='bg-green-300 shadow-sm rounded-xl'>{user.role}</Badge>
                   </TableCell>
                   <TableCell>{user.designation}</TableCell>
                   <TableCell>{user.companyId}</TableCell>

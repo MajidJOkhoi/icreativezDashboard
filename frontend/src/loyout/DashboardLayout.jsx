@@ -1,10 +1,14 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import {
+  BriefcaseBusiness,
+  CalendarCheck,
+  CalendarOff,
   CircleUser,
   HomeIcon,
   Menu,
   Package,
   Search,
+  TrendingUp,
   User,
   View,
 } from "lucide-react";
@@ -49,12 +53,12 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr]  border-2 lg:grid-cols-[280px_1fr] bg-white">
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr]   lg:grid-cols-[280px_1fr] bg-white">
       <div className="hidden border-r bg-gray-100 md:block rounded-xl ">
-        <div className="flex h-full max-h-screen flex-col gap-4 ">
-          <div className="flex h-14 items-center border-b px-4 py-4 lg:h-[60px] lg:px-6 bg-[#BA0D09] rounded-b-sm">
+        <div className="flex h-full max-h-screen flex-col gap-4 min-h-screen">
+          <div className="flex h-14 items-center  px-4 py-4 lg:h-[60px] lg:px-6  bg-[#BA0D09] ">
             <Link to="/dashboard/home" className="flex items-center gap-2 font-semibold">
-              <img src={logo} alt="Logo" className="h-12 rounded-lg w-auto pt-1" />
+              <img src={logo} alt="Logo" className="h-12 rounded-lg w-auto " />
             </Link>
           </div>
           <div className="flex-1">
@@ -64,14 +68,14 @@ const DashboardLayout = () => {
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
               >
                 <HomeIcon className="h-6 w-6 text-[#BA0D09]" />
-                <i class="bi bi-house-heart"></i>
-                Home
+              
+                Dashboard
               </Link>
               <Link
                 to="/dashboard/projects"
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
               >
-                <Package className="h-6 w-6 text-[#BA0D09]" />
+                <BriefcaseBusiness  className="h-6 w-6 text-[#BA0D09]" />
                 Manage Projects
               </Link>
               <Link
@@ -85,21 +89,21 @@ const DashboardLayout = () => {
                 to="/dashboard/leaves"
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
               >
-                <Package className="h-6 w-6 text-[#BA0D09]" />
+                <CalendarOff className="h-6 w-6 text-[#BA0D09]" />
                 Manage Leave
               </Link>
               <Link
                 to="/dashboard/attendance"
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
               >
-                <View className="h-6 w-6 text-[#BA0D09]" />
+                <CalendarCheck className="h-6 w-6 text-[#BA0D09]" />
                 Manage Attendance
               </Link>
               <Link
                 to="/dashboard/performance"
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
               >
-                <Package className="h-6 w-6 text-[#BA0D09]" />
+                <TrendingUp className="h-6 w-6 text-[#BA0D09]" />
                 Performance
               </Link>
             </nav>
@@ -164,7 +168,7 @@ const DashboardLayout = () => {
                 <Input
                   type="search"
                   placeholder="Search Projects ..."
-                  className="w-full appearance-none rounded-3xl bg-white pl-8 shadow-sm border border-gray-300 focus:border-green-500 md:w-2/3 lg:w-1/3"
+                  className="w-full appearance-none rounded-3xl pl-8   md:w-2/3 lg:w-1/3"
                 />
                 
               </div>

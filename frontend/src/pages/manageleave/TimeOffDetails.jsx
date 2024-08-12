@@ -88,7 +88,8 @@ const TimeOffDetails = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Card className="max-w-lg mx-auto p-6 rounded-lg shadow-lg border border-gray-200">
+      <Card className="max-w-lg mx-auto p-6 rounded-3xl  shadow-sm shadow-green-50 border border-gray-200">
+
         <CardHeader className="flex justify-between items-center border-b pb-4">
           <CardTitle className="text-xl font-semibold">Time Off Details</CardTitle>
         

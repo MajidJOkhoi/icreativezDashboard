@@ -55,18 +55,20 @@ const AttendanceDetails = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Card className="max-w-6xl mx-auto p-6 rounded-lg shadow-lg">
+      <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader className="flex justify-between items-center">
           <CardTitle>Attendance Details</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center mb-6">
+          <div className="flex mb-6">
+            
+      
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
               dateFormat="MM/yyyy"
               showMonthYearPicker
-              className="p-2 border rounded"
+              className="  p-2 border rounded-3xl"
             />
           </div>
 
