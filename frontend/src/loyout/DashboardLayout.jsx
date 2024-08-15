@@ -165,10 +165,10 @@ const DashboardLayout = () => {
           <div className="w-full flex-1 ">
             <form>
               <div className="relative">
-                <Input
+                <input
                   type="search"
                   placeholder="Search Projects ..."
-                  className="w-full appearance-none rounded-3xl pl-8   md:w-2/3 lg:w-1/3"
+                  className="border p-2 rounded-3xl w-full pr-10 focus:outline-none focus:ring focus:ring-green-200  md:w-2/3 lg:w-1/3"
                 />
                 
               </div>

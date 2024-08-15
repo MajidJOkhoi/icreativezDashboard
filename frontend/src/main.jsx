@@ -31,7 +31,7 @@ import CheckPerformance from "./pages/manageperformance/CheckPerformance";
 const router = createBrowserRouter([
   {
     path: "/dashboard",
-    // element: <ProtectedRoute />,
+    element: <ProtectedRoute />,
     children: [
       {
         path: "/dashboard",
@@ -46,6 +46,8 @@ const router = createBrowserRouter([
           // Manage Project Routes
           { path: "projects", element: <ManageProject /> },
           { path: "projects/create", element: <CreateProject /> },
+
+          
           // Manage Team Routes
           { path: "team", element: <ManageTeam /> },
           { path: "team/create", element: <AddUser /> },

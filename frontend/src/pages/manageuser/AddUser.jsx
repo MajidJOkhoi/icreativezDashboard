@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -22,63 +22,97 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-const jobTypeOptions = [
-  { label: "Full Time", value: "1" },
-  { label: "Part Time", value: "2" },
-  { label: "Full Time Intern", value: "3" },
-  { label: "Part Time Intern", value: "4" },
-];
-
-const roleOptions = [
-  { label: "Admin", value: "1" },
-  { label: "Team Lead", value: "2" },
-  { label: "User", value: "3" },
-];
-
-const designationOptions = [
-  { label: "Administrator", value: "1" },
-  { label: "Senior Web Developer", value: "2" },
-  { label: "Junior Web Developer", value: "3" },
-  { label: "Senior Flutter Developer", value: "4" },
-  { label: "Junior Flutter Developer", value: "5" },
-  { label: "Junior Python Developer", value: "6" },
-  { label: "Senior Python Developer", value: "7" },
-  { label: "Junior Graphic Designer", value: "8" },
-  { label: "Senior Graphic Designer", value: "9" },
-  { label: "Junior SEO Expert", value: "10" },
-  { label: "Senior SEO Expert", value: "11" },
-];
-
 const AddUser = () => {
   const navigate = useNavigate();
+  const [jobTypeOptions, setJobTypeOptions] = useState([]);
+  const [designationOptions, setDesignationOptions] = useState([]);
+  const [roleOptions, setRoleOptions] = useState([]);
 
-  const {
-    control,
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit, register, formState: { errors } } = useForm({
     defaultValues: {
       fullName: "",
       email: "",
       contact: "",
       address: "",
       password: "",
-      companyId: "66a22d85820e6836bbc1e8e5",
+      companyId: "66ba0d4aeb042864cd040b6c", 
       jobType: "",
       designation: "",
       role: "",
     },
   });
 
+  useEffect(() => {
+    const fetchJobTypes = async () => {
+      try {
+        const response = await axios.get("/api/jobType/getALLJobTypes");
+        setJobTypeOptions(response.data.jobTypes.map(type => ({
+          label: type.name,
+          value: type.id
+        })));
+      } catch (error) {
+        toast.error("Failed to load job types");
+        console.error("Job Type Error:", error);
+      }
+    };
+
+    const fetchDesignations = async () => {
+      try {
+        const response = await axios.get("/api/designation/getAllDesignation");
+        setDesignationOptions(response.data.designations.map(designation => ({
+          label: designation.name,
+          value: designation.id
+        })));
+      } catch (error) {
+        toast.error("Failed to load designations");
+        console.error("Designation Error:", error);
+      }
+    };
+
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get("/api/role/getAllRoles");
+        setRoleOptions(response.data.roles.map(role => ({
+          label: role.name,
+          value: role.id
+        })));
+      } catch (error) {
+        toast.error("Failed to load roles");
+        console.error("Role Error:", error);
+      }
+    };
+
+    fetchJobTypes();
+    fetchDesignations();
+    fetchRoles();
+  }, []);
+
   const onSubmit = async (data) => {
+    // Format the data to match the API expectations
+    const formattedData = {
+      ...data,
+      jobType: data.jobType.value,
+      designation: data.designation.value,
+      role: data.role.value,
+    };
+
+    console.log("Formatted Form Data:", formattedData);
+
     try {
-      // await axios.post('/api/users', data);
-      console.log(data);
+      await axios.post("/api/user/create", formattedData);
       toast.success("User created successfully");
       navigate("/dashboard/team");
     } catch (error) {
-      toast.error(`Error: ${error.response?.data?.message || error.message}`);
+      if (error.response) {
+        console.error("Error Response Data:", error.response.data);
+        toast.error(`Server Error: ${error.response.data.message || 'An error occurred'}`);
+      } else if (error.request) {
+        console.error("Error Request Data:", error.request);
+        toast.error("Network Error: No response received from the server");
+      } else {
+        console.error("Error Message:", error.message);
+        toast.error(`Error: ${error.message}`);
+      }
     }
   };
 
@@ -119,13 +153,14 @@ const AddUser = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
+            {/* Full Name Field */}
             <div className="w-full">
               <label htmlFor="fullName" className="block mb-2 font-medium">
                 Full Name
               </label>
               <Input
                 id="fullName"
-                className="w-full"
+                className="w-full rounded-3xl"
                 {...register("fullName", { required: "Full name is required" })}
               />
               {errors.fullName && (
@@ -133,14 +168,15 @@ const AddUser = () => {
               )}
             </div>
 
+            {/* Email Field */}
             <div className="w-full">
-              <label htmlFor="email" className="block mb-2 font-medium">
+              <label htmlFor="email" className="block mb-2 font-medium ">
                 Email
               </label>
               <Input
                 id="email"
                 type="email"
-                className="w-full"
+                className="w-full rounded-3xl"
                 {...register("email", { required: "Email is required" })}
               />
               {errors.email && (
@@ -148,14 +184,14 @@ const AddUser = () => {
               )}
             </div>
 
+            {/* Contact Field */}
             <div className="w-full">
               <label htmlFor="contact" className="block mb-2 font-medium">
                 Contact No{" "}
               </label>
               <Input
                 id="contact"
-                className="w-full"
-                type="number"
+                className="w-full rounded-3xl"
                 {...register("contact", { required: "Contact is required" })}
               />
               {errors.contact && (
@@ -163,28 +199,32 @@ const AddUser = () => {
               )}
             </div>
 
+            {/* Address Field */}
             <div className="w-full">
-              <label htmlFor="address" className="block mb-2 font-medium">
+              <label htmlFor="address" className="block mb-2 font-medium ">
                 Address
               </label>
-              <Textarea
-                id="address"
-                className="w-full min-h-[150px]"
-                {...register("address", { required: "Address is required" })}
+              <Input
+                 id="address"
+                 className="w-full  rounded-3xl"
+                 {...register("address", { required: "Address is required" })}
               />
+             
+             
               {errors.address && (
                 <p className="text-red-500">{errors.address.message}</p>
               )}
             </div>
 
+            {/* Password Field */}
             <div className="w-full">
-              <label htmlFor="password" className="block mb-2 font-medium">
+              <label htmlFor="password" className="block mb-2 font-medium ">
                 Password
               </label>
               <Input
                 id="password"
                 type="password"
-                className="w-full"
+                className="w-full rounded-3xl"
                 {...register("password", { required: "Password is required" })}
               />
               {errors.password && (
@@ -192,24 +232,9 @@ const AddUser = () => {
               )}
             </div>
 
+            {/* Job Type Field */}
             <div className="w-full">
-              <label htmlFor="companyId" className="block mb-2 font-medium">
-                Company ID
-              </label>
-              <Input
-                id="companyId"
-                className="w-full"
-                {...register("companyId", {
-                  required: "Company ID is required",
-                })}
-              />
-              {errors.companyId && (
-                <p className="text-red-500">{errors.companyId.message}</p>
-              )}
-            </div>
-
-            <div className="w-full">
-              <label htmlFor="jobType" className="block mb-2 font-medium">
+              <label htmlFor="jobType" className="block mb-2 font-medium ">
                 Job Type
               </label>
               <Controller
@@ -219,7 +244,7 @@ const AddUser = () => {
                   <Select
                     id="jobType"
                     options={jobTypeOptions}
-                    className="w-full"
+                    className="w-full rounded-3xl"
                     {...field}
                     onChange={(selected) => field.onChange(selected)}
                   />
@@ -230,8 +255,9 @@ const AddUser = () => {
               )}
             </div>
 
+            {/* Role Field */}
             <div className="w-full">
-              <label htmlFor="role" className="block mb-2 font-medium">
+              <label htmlFor="role" className="block mb-2 font-medium ">
                 Role
               </label>
               <Controller
@@ -241,7 +267,7 @@ const AddUser = () => {
                   <Select
                     id="role"
                     options={roleOptions}
-                    className="w-full"
+                    className="w-full rounded-3xl"
                     {...field}
                     onChange={(selected) => field.onChange(selected)}
                   />
@@ -252,8 +278,9 @@ const AddUser = () => {
               )}
             </div>
 
+            {/* Designation Field */}
             <div className="w-full">
-              <label htmlFor="designation" className="block mb-2 font-medium">
+              <label htmlFor="designation" className="block mb-2 font-medium ">
                 Designation
               </label>
               <Controller
@@ -263,7 +290,7 @@ const AddUser = () => {
                   <Select
                     id="designation"
                     options={designationOptions}
-                    className="w-full"
+                    className="w-full rounded-3xl"
                     {...field}
                     onChange={(selected) => field.onChange(selected)}
                   />

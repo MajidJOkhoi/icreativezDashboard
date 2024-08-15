@@ -13,10 +13,10 @@ import { Button } from "@/components/ui/button";
 import {
   LoaderCircle,
   MoreHorizontalIcon,
+  CalendarIcon,
   PlusCircle,
-  Trash,
-  ChevronLeft,
-  ChevronRight,
+  SearchCheck,
+  SearchIcon,
 } from "lucide-react";
 import {
   Card,
@@ -40,157 +40,170 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { Avatar } from "@/components/ui/avatar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-toastify";
 
 const ManageTeam = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState([]);
-
-  // Pagination states
+  const [searchName, setSearchName] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5; // Show 5 users per page
-
-  const totalPages = Math.ceil(filteredUsers.length / pageSize);
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      fullName: "",
-      email: "",
-      jobType: [],
-      designation: "",
-      address: "",
-      username: "",
-    },
-  });
-
-  const navigateToCreateUser = () => {
-    navigate(`/dashboard/team/create`);
-  };
-
-  const onSubmit = (data) => {
-    console.log("Submitted data:", data);
-    reset();
-  };
+  const [requestsPerPage] = useState(5);
 
   useEffect(() => {
-    setLoading(true);
-    // Commented out the API call for demonstration purposes
-    // axios
-    //   .get("https://backend-production-6e95.up.railway.app/api/user/getMyAllUsers")
-    //   .then((response) => {
-    //     const users = response.data; // Assuming the data is in the correct format
-    //     setUsers(users);
-    //     setFilteredUsers(users);
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     setError(error.message);
-    //     setLoading(false);
-    //   });
+    const fetchRequests = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("/api/user/getMyAllUsers");
+        if (response.data && response.data.myUsers) {
+          const formattedData = response.data.myUsers.map((user) => ({
+            _id: user._id,
+            fullName: user.fullName || "Unknown",
+            address: user.address || "Unknown",
+            companyId: user.companyId || "N/A",
+            contact: user.contact || "N/A",
+            designation:
+              {
+                1: "Administrator",
+                2: "Senior Web Developer",
+                3: "Junior Web Developer",
+                4: "Senior Flutter Developer",
+                5: "Junior Flutter Developer",
+                6: "Senior Python Developer",
+                7: "Junior Python Developer",
+                8: "Senior SEO Expert",
+                9: "Junior SEO Expert",
+              }[user.designation] || "N/A",
+            email: user.email || "N/A",
+            jobType:
+              {
+                1: "Full Time",
+                2: "Part Time",
+                3: "Full Time Intern",
+                4: "Part Time Intern",
+              }[user.jobType] || "N/A",
+            role:
+              {
+                1: "Admin",
+                2: "Team Lead",
+                3: "User",
+              }[user.role] || "N/A",
+          }));
 
-    // Sample data for demonstration purposes
-    const sampleData = [
-      {
-        _id: "1",
-        fullName: "John Doe",
-        email: "john.doe@example.com",
-        contact: "123-456-7890",
-        address: "123 Main St, Anytown, USA",
-        jobType: "Full Time",
-        role: "Admin",
-        designation: "Senior Web Developer",
-        companyId: "Company1",
-      },
-      {
-        _id: "2",
-        fullName: "Jane Smith",
-        email: "jane.smith@example.com",
-        contact: "098-765-4321",
-        address: "456 Oak St, Anytown, USA",
-        jobType: "Part Time",
-        role: "User",
-        designation: "Junior Web Developer",
-        companyId: "Company2",
-      },
-      {
-        _id: "2",
-        fullName: "Jane Smith",
-        email: "jane.smith@example.com",
-        contact: "098-765-4321",
-        address: "456 Oak St, Anytown, USA",
-        jobType: "Part Time",
-        role: "User",
-        designation: "Junior Web Developer",
-        companyId: "Company2",
-      },
-      {
-        _id: "2",
-        fullName: "Jane Smith",
-        email: "jane.smith@example.com",
-        contact: "098-765-4321",
-        address: "456 Oak St, Anytown, USA",
-        jobType: "Part Time",
-        role: "User",
-        designation: "Junior Web Developer",
-        companyId: "Company2",
-      },
-      {
-        _id: "2",
-        fullName: "Jane Smith",
-        email: "jane.smith@example.com",
-        contact: "098-765-4321",
-        address: "456 Oak St, Anytown, USA",
-        jobType: "Part Time",
-        role: "User",
-        designation: "Junior Web Developer",
-        companyId: "Company2",
-      },
-      {
-        _id: "2",
-        fullName: "Jane Smith",
-        email: "jane.smith@example.com",
-        contact: "098-765-4321",
-        address: "456 Oak St, Anytown, USA",
-        jobType: "Part Time",
-        role: "User",
-        designation: "Junior Web Developer",
-        companyId: "Company2",
-      },
-      // Add more sample data as needed
-    ];
-    setUsers(sampleData);
-    setFilteredUsers(sampleData);
-    setLoading(false);
+          setRequests(formattedData);
+          setFilteredRequests(formattedData);
+        } else {
+          setError("No data found");
+        }
+      } catch (err) {
+        setError("An error occurred while fetching attendance requests.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRequests();
   }, []);
 
   useEffect(() => {
-    const filtered = users.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.jobType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.contact.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.companyId.toLowerCase().includes(searchQuery.toLowerCase())
+    filterRequests();
+  }, [searchName, selectedMonth]);
+
+  const filterRequests = () => {
+    let filtered = requests;
+    if (searchName) {
+      filtered = filtered.filter((request) =>
+        request.fullName.toLowerCase().includes(searchName.toLowerCase())
+      );
+    }
+    
+    setFilteredRequests(filtered);
+  };
+
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = filteredRequests.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
+
+  const navigateToCreateUser = () => {
+    navigate("/dashboard/team/create");
+  };
+
+  // delete user
+
+ 
+    const handleDelete = async (id) => {
+      try {
+        await axios.put(`/api/user/delete/${id}`);
+        toast.success("User deleted successfully");
+        setRequests(prev => prev.filter(request => request._id !== id)); 
+      } catch (error) {
+        toast.error("Error deleting the user");
+      }
+    }
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const getBadgeColor = (type, value) => {
+    const colors = {
+      designation: {
+        Administrator:
+          "bg-red-100 text-red-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior Web Developer":
+          "bg-blue-100 text-blue-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior Web Developer":
+          "bg-green-100 text-green-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior Flutter Developer":
+          "bg-yellow-100 text-yellow-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior Flutter Developer":
+          "bg-orange-100 text-orange-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior Python Developer":
+          "bg-purple-100 text-purple-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior Python Developer":
+          "bg-pink-100 text-pink-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior SEO Expert":
+          "bg-teal-100 text-teal-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior SEO Expert":
+          "bg-indigo-100 text-indigo-800 text-center shadow-md hover:bg-green-500 hover:text-white",
+      },
+      jobType: {
+        "Full Time":
+          "bg-green-100 text-green-800 text-center font-bold shadow-md hover:bg-green-500 hover:text-white ",
+        "Part Time":
+          "bg-yellow-100 text-yellow-800 text-center font-bold shadow-md hover:bg-green-500 hover:text-white",
+        "Full Time Intern":
+          "bg-blue-100 text-blue-800  font-bold shadow-md hover:bg-green-500 hover:text-white",
+        "Part Time Intern":
+          "bg-gray-100 text-blue-800 font-bold shadow-md hover:bg-green-500 hover:text-white",
+      },
+      role: {
+        Admin:
+          "bg-red-100 text-red-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white",
+        "Team Lead":
+          "bg-blue-100 text-blue-800 text-center shadow-sm font-bold hover:bg-green-500 hover:text-white",
+        User: "bg-green-100 text-green-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white ",
+      },
+    };
+
+    return (
+      colors[type][value] ||
+      "bg-red-100 text-red-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white"
     );
-    setFilteredUsers(filtered);
-    setCurrentPage(1);
-  }, [searchQuery, users]);
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <LoaderCircle className="h-10 w-10 animate-spin" />
+        <LoaderCircle className="h-10 w-10 text-green-600 animate-spin" />
       </div>
     );
   }
@@ -205,7 +218,7 @@ const ManageTeam = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -217,77 +230,108 @@ const ManageTeam = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Button onClick={navigateToCreateUser} className="rounded-3xl bg-[#BA0D09] hover:bg-[#BA0D09] hover:text-white">
+
+        <Button
+          onClick={navigateToCreateUser}
+          className="rounded-3xl bg-[#BA0D09] hover:bg-[#BA0D09] hover:text-white"
+        >
           <PlusCircle size={20} />
           <span className="ml-2">Add User</span>
         </Button>
       </div>
 
-      {/* Search Input */}
-      <div className="my-4">
-        <Input
-          type="text"
-          placeholder="Search by name, email, role, job type, contact, or company ID"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-grow rounded-3xl"
-        />
+      <div className="flex items-center justify-between mb-4 space-x-2">
+        <div className="relative flex-grow">
+          <input
+            type="text"
+            placeholder="Search by name"
+            className="border p-2 rounded-3xl w-full pr-10 focus:outline-none focus:ring focus:ring-green-200"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+          />
+          <SearchIcon
+            size={24}
+            className="absolute top-2 right-4 text-gray-500 pointer-events-none"
+          />
+        </div>
+
+       
       </div>
 
-      <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
+      <Card className="mt-2 w-full rounded-3xl shadow-md hover:shadow-lg transition-shadow duration-300 max-w-sm sm:max-w-full">
         <CardHeader>
-          <CardTitle>All Users</CardTitle>
-          <CardDescription>
-            Manage your Users and view their details.
-          </CardDescription>
+          <CardTitle>View List Of All Users</CardTitle>
+          
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Full Name</TableHead>
+                <TableHead>Name</TableHead>
+                {/* <TableHead>Company ID</TableHead> */}
+                <TableHead>Role</TableHead>
+                <TableHead>Job Type</TableHead>
+                <TableHead>Designation</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Contact</TableHead>
                 <TableHead>Address</TableHead>
-                <TableHead>Job Type</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Designation</TableHead>
-                <TableHead>Company ID</TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedUsers.map((user) => (
-                <TableRow key={user._id}>
-                  <TableCell>{user.fullName}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.contact}</TableCell>
-                  <TableCell>{user.address}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className='bg-green-300 shadow-sm rounded-xl'>{user.jobType}</Badge>
+              {currentRequests.map((request) => (
+                <TableRow
+                  key={request._id}
+                  className="hover:bg-gray-100 transition-colors duration-300"
+                >
+                  <TableCell className="font-semibold">
+                    {request.fullName}
                   </TableCell>
+
+                  {/* <TableCell>{request.companyId}</TableCell> */}
+
                   <TableCell>
-                    <Badge variant="outline" className='bg-green-300 shadow-sm rounded-xl'>{user.role}</Badge>
+                    <Badge
+                      className={`${getBadgeColor(
+                        "role",
+                        request.role
+                      )} text-sm py-1  rounded-3xl`}
+                    >
+                      {request.role}
+                    </Badge>
                   </TableCell>
-                  <TableCell>{user.designation}</TableCell>
-                  <TableCell>{user.companyId}</TableCell>
+
+                  <TableCell>
+                    <Badge
+                      className={`${getBadgeColor(
+                        "jobType",
+                        request.jobType
+                      )}  text-sm py-1  rounded-3xl`}
+                    >
+                      {request.jobType}
+                    </Badge>
+                  </TableCell>
+
+                  <TableCell className="font-semibold">
+                    {request.designation}
+                  </TableCell>
+
+                  <TableCell>{request.email}</TableCell>
+                  <TableCell>{request.contact}</TableCell>
+                  <TableCell>{request.address}</TableCell>
                   <TableCell>
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                          <MoreHorizontalIcon />
-                        </Button>
+                      <DropdownMenuTrigger>
+                        <MoreHorizontalIcon />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent>
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <Link to={`/dashboard/users/edit/${user._id}`}>
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                        </Link>
-                        <Link to={`/dashboard/users/delete/${user._id}`}>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
-                        </Link>
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(request._id)}
+                        >
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -295,26 +339,23 @@ const ManageTeam = () => {
               ))}
             </TableBody>
           </Table>
-
-          {/* Pagination Controls */}
-          <div className="flex items-center justify-between mt-4">
-            <Button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              variant="ghost"
-            >
-              <ChevronLeft />
-            </Button>
-            <div>
-              Page {currentPage} of {totalPages}
-            </div>
-            <Button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              variant="ghost"
-            >
-              <ChevronRight />
-            </Button>
+          {/* Pagination */}
+          <div className="flex justify-center mt-4 space-x-2">
+            {Array.from({
+              length: Math.ceil(filteredRequests.length / requestsPerPage),
+            }).map((_, index) => (
+              <Button
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`px-4 py-2 text-sm rounded-full ${
+                  currentPage === index + 1
+                    ? "bg-[#BA0D09] text-white"
+                    : "bg-gray-200"
+                }`}
+              >
+                {index + 1}
+              </Button>
+            ))}
           </div>
         </CardContent>
       </Card>

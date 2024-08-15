@@ -38,7 +38,7 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         login(data.token);
         toast.success('Login successful');
         navigate('/dashboard/home');
@@ -76,12 +76,12 @@ const Login = () => {
             </Button>
           </CardFooter>
         </form>
-        <div className="mb-4 text-center text-sm">
+        {/* <div className="mb-4 text-center text-sm">
           Don't have an account?
           <Link to="/auth/signup" className="-underline font-bold ml-1">
             Sign up
           </Link>
-        </div>
+        </div> */}
       </Card>
     </section>
   );

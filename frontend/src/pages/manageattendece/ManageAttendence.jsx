@@ -10,7 +10,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { LoaderCircle, MoreHorizontalIcon, CalendarIcon } from "lucide-react";
+import {
+  LoaderCircle,
+  MoreHorizontalIcon,
+  CalendarIcon,
+  PlusCircle,
+  SearchCheck,
+  SearchIcon,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -36,8 +43,9 @@ import {
 import { Avatar } from "@/components/ui/avatar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-toastify";
 
-const ManageAttendance = () => {
+const ManageAttendence = () => {
   const navigate = useNavigate();
   const [requests, setRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -53,7 +61,6 @@ const ManageAttendance = () => {
       try {
         setLoading(true);
         const response = await axios.get("/api/user/getMyAllUsers");
-        console.log(response.data.myUsers)
         if (response.data && response.data.myUsers) {
           const formattedData = response.data.myUsers.map((user) => ({
             _id: user._id,
@@ -61,35 +68,34 @@ const ManageAttendance = () => {
             address: user.address || "Unknown",
             companyId: user.companyId || "N/A",
             contact: user.contact || "N/A",
-           
-            designation: {
-              1: "Administrator",
-              2: "Senior Web Developer",
-              3: "Junior Web Developer",
-              4: "Senior Flutter Developer",
-              5: "Junior Flutter Developer",
-              6: "Senior Python Developer",
-              7: "Junior Python Developer",
-              8: "Senior SEO Expert",
-              9: "Senior SEO Expert",
-            }[user.designation] || "N/A",
-
-
+            designation:
+              {
+                1: "Administrator",
+                2: "Senior Web Developer",
+                3: "Junior Web Developer",
+                4: "Senior Flutter Developer",
+                5: "Junior Flutter Developer",
+                6: "Senior Python Developer",
+                7: "Junior Python Developer",
+                8: "Senior SEO Expert",
+                9: "Junior SEO Expert",
+              }[user.designation] || "N/A",
             email: user.email || "N/A",
-            jobType: {
-              1: "Full Time",
-              2: "Part Time",
-              3: "Full Time Intern",
-              4: "Part Time Intern"
-            }[user.jobType] || "N/A",
-            role: {
-              1: "Admin",
-              2: "Team Lead",
-              3: "User"
-            }[user.role] || "N/A",
-          
+            jobType:
+              {
+                1: "Full Time",
+                2: "Part Time",
+                3: "Full Time Intern",
+                4: "Part Time Intern",
+              }[user.jobType] || "N/A",
+            role:
+              {
+                1: "Admin",
+                2: "Team Lead",
+                3: "User",
+              }[user.role] || "N/A",
           }));
-          
+
           setRequests(formattedData);
           setFilteredRequests(formattedData);
         } else {
@@ -102,7 +108,6 @@ const ManageAttendance = () => {
         setLoading(false);
       }
     };
-    
 
     fetchRequests();
   }, []);
@@ -116,17 +121,9 @@ const ManageAttendance = () => {
     if (searchName) {
       filtered = filtered.filter((request) =>
         request.fullName.toLowerCase().includes(searchName.toLowerCase())
-        
       );
     }
-    if (selectedMonth) {
-      const month = selectedMonth.toLocaleString("default", { month: "long" });
-      filtered = filtered.filter(
-        (request) =>
-          new Date(request.date).toLocaleString("default", { month: "long" }) ===
-          month
-      );
-    }
+   
     setFilteredRequests(filtered);
   };
 
@@ -137,7 +134,67 @@ const ManageAttendance = () => {
     indexOfLastRequest
   );
 
+
+  // delete user
+
+    const handleDelete = async (id) => {
+      try {
+        await axios.put(`/api/user/delete/${id}`);
+        toast.success("User deleted successfully");
+        setRequests(prev => prev.filter(request => request._id !== id)); 
+      } catch (error) {
+        toast.error("Error deleting the user");
+      }
+    }
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const getBadgeColor = (type, value) => {
+    const colors = {
+      designation: {
+        Administrator:
+          "bg-red-100 text-red-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior Web Developer":
+          "bg-blue-100 text-blue-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior Web Developer":
+          "bg-green-100 text-green-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior Flutter Developer":
+          "bg-yellow-100 text-yellow-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior Flutter Developer":
+          "bg-orange-100 text-orange-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior Python Developer":
+          "bg-purple-100 text-purple-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior Python Developer":
+          "bg-pink-100 text-pink-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Senior SEO Expert":
+          "bg-teal-100 text-teal-800 text-center shadow-sm hover:bg-green-500 hover:text-white",
+        "Junior SEO Expert":
+          "bg-indigo-100 text-indigo-800 text-center shadow-md hover:bg-green-500 hover:text-white",
+      },
+      jobType: {
+        "Full Time":
+          "bg-green-100 text-green-800 text-center font-bold shadow-md hover:bg-green-500 hover:text-white ",
+        "Part Time":
+          "bg-yellow-100 text-yellow-800 text-center font-bold shadow-md hover:bg-green-500 hover:text-white",
+        "Full Time Intern":
+          "bg-blue-100 text-blue-800  font-bold shadow-md hover:bg-green-500 hover:text-white",
+        "Part Time Intern":
+          "bg-gray-100 text-blue-800 font-bold shadow-md hover:bg-green-500 hover:text-white",
+      },
+      role: {
+        Admin:
+          "bg-red-100 text-red-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white",
+        "Team Lead":
+          "bg-blue-100 text-blue-800 text-center shadow-sm font-bold hover:bg-green-500 hover:text-white",
+        User: "bg-green-100 text-green-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white ",
+      },
+    };
+
+    return (
+      colors[type][value] ||
+      "bg-red-100 text-red-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white"
+    );
+  };
 
   if (loading) {
     return (
@@ -165,112 +222,108 @@ const ManageAttendance = () => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">Attendance</BreadcrumbLink>
+              <BreadcrumbLink href="#">Attendence</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+
+       
       </div>
 
       <div className="flex items-center justify-between mb-4 space-x-2">
-        <input
-          type="text"
-          placeholder="Search by name"
-          className="border p-2 rounded-3xl flex-grow"
-          value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
-        />
-        {/* <div className="relative">
-          <DatePicker
-            selected={selectedMonth}
-            onChange={(date) => setSelectedMonth(date)}
-            dateFormat="MMMM yyyy"
-            showMonthYearPicker
-            className="border p-2 rounded w-full"
-            placeholderText="Select month"
+        <div className="relative flex-grow">
+          <input
+            type="text"
+            placeholder="Search by name"
+            className="border p-2 rounded-3xl w-full pr-10 focus:outline-none focus:ring focus:ring-green-200"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
           />
-          <CalendarIcon
+          <SearchIcon
             size={24}
-            className="absolute top-2 right-2 text-gray-500 pointer-events-none"
+            className="absolute top-2 right-4 text-gray-500 pointer-events-none"
           />
-        </div> */}
+        </div>
+
+      
       </div>
 
-      <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
+      <Card className="mt-2 w-full rounded-3xl shadow-md hover:shadow-lg transition-shadow duration-300 max-w-sm sm:max-w-full">
         <CardHeader>
-          <CardTitle>View List Of All Users </CardTitle>
-          <CardDescription className='text-red-500'> To Check Attadence Report Click User Record .</CardDescription>
+          <CardTitle>View List Of All Users</CardTitle>
+          <CardDescription>
+            To Check  Monthly <span className="text-red-500"> Report Attendance </span> Click User Record.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-        
                 <TableHead>Name</TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>Company ID</TableHead>
-                <TableHead>Contact</TableHead>
+                {/* <TableHead>Company ID</TableHead> */}
+                <TableHead>Role</TableHead>
+                <TableHead>Job Type</TableHead>
                 <TableHead>Designation</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Job Type</TableHead>
-                <TableHead>Role</TableHead>
-                
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
+                <TableHead>Contact</TableHead>
+                <TableHead>Address</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentRequests.map((request) => (
                 <TableRow
-                  key={request._id}
-                  className="cursor-pointer hover:bg-gray-50 rounded-3xl"
-                  onClick={() =>
-                    navigate(`/dashboard/attendencedetails/${request._id}`)
-                  }
-                >
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Avatar
-                        src="https://via.placeholder.com/50"
-                        alt={request.fullName || "User"}
-                      />
-                      <div>
-                        <div className="font-medium">{request.fullName}</div>
-                      </div>
-                    </div>
+                key={request._id}
+                className="cursor-pointer hover:bg-gray-50 rounded-3xl"
+                onClick={() =>
+                  navigate(`/dashboard/attendencedetails/${request._id}`)
+                }
+              >
+                  <TableCell className="font-semibold">
+                    {request.fullName}
                   </TableCell>
-                  <TableCell>{request.address}</TableCell>
-                  <TableCell>{request.companyId}</TableCell>
-                  <TableCell>{request.contact}</TableCell>
-                  <TableCell>{request.designation}</TableCell>
+
+                  {/* <TableCell>{request.companyId}</TableCell> */}
+
+                  <TableCell>
+                    <Badge
+                      className={`${getBadgeColor(
+                        "role",
+                        request.role
+                      )} text-sm py-1  rounded-3xl`}
+                    >
+                      {request.role}
+                    </Badge>
+                  </TableCell>
+
+                  <TableCell>
+                    <Badge
+                      className={`${getBadgeColor(
+                        "jobType",
+                        request.jobType
+                      )}  text-sm py-1  rounded-3xl`}
+                    >
+                      {request.jobType}
+                    </Badge>
+                  </TableCell>
+
+                  <TableCell className="font-semibold">
+                    {request.designation}
+                  </TableCell>
+
                   <TableCell>{request.email}</TableCell>
-                  <TableCell>{request.jobType}</TableCell>
-                  <TableCell>{request.role}</TableCell>
-                
+                  <TableCell>{request.contact}</TableCell>
+                  <TableCell>{request.address}</TableCell>
                   <TableCell>
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontalIcon className="h-4 w-4" />
-                        </Button>
+                      <DropdownMenuTrigger>
+                        <MoreHorizontalIcon />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent>
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() =>
-                            navigate(`/dashboard/attendencedetails/${request._id}`)
-                          }
-                        >
-                          View
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => alert(`Edit ${request.fullName}`)}
-                        >
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => alert(`Delete ${request.fullName}`)}
+                          onClick={() => handleDelete(request._id)}
                         >
                           Delete
                         </DropdownMenuItem>
@@ -281,26 +334,23 @@ const ManageAttendance = () => {
               ))}
             </TableBody>
           </Table>
-
           {/* Pagination */}
-          <div className="flex justify-center mt-4">
-            <nav>
-              <ul className="flex space-x-2">
-                {Array.from(
-                  { length: Math.ceil(filteredRequests.length / requestsPerPage) },
-                  (_, index) => (
-                    <li key={index}>
-                      <Button
-                        variant={currentPage === index + 1 ? "primary" : "outline"}
-                        onClick={() => paginate(index + 1)}
-                      >
-                        {index + 1}
-                      </Button>
-                    </li>
-                  )
-                )}
-              </ul>
-            </nav>
+          <div className="flex justify-center mt-4 space-x-2">
+            {Array.from({
+              length: Math.ceil(filteredRequests.length / requestsPerPage),
+            }).map((_, index) => (
+              <Button
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`px-4 py-2 text-sm rounded-full ${
+                  currentPage === index + 1
+                    ? "bg-[#BA0D09] text-white"
+                    : "bg-gray-200"
+                }`}
+              >
+                {index + 1}
+              </Button>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -308,6 +358,4 @@ const ManageAttendance = () => {
   );
 };
 
-export default ManageAttendance;
-
-
+export default ManageAttendence;
