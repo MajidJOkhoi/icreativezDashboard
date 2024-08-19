@@ -54,13 +54,21 @@ const DashboardLayout = () => {
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr]   lg:grid-cols-[280px_1fr] bg-white">
-      <div className="hidden border-r bg-gray-100 md:block rounded-xl ">
+      <div className="hidden border-r bg-gray-100 md:block ">
         <div className="flex h-full max-h-screen flex-col gap-4 min-h-screen">
-          <div className="flex h-14 items-center  px-4 py-4 lg:h-[60px] lg:px-6  bg-[#BA0D09] ">
-            <Link to="/dashboard/home" className="flex items-center gap-2 font-semibold">
-              <img src={logo} alt="Logo" className="h-12 rounded-lg w-auto " />
+          <div className="flex h-14 items-center px-4 py-4 my-4 mx-4 lg:h-[80px] rounded-3xl lg:px-6 shadow-lg  bg-[#BA0D09]">
+            <Link
+              to="/dashboard/home"
+              className="flex items-center gap-2 font-semibold hover:text-white transition-colors duration-300 ease-in-out"
+            >
+              <img
+                src={logo}
+                alt="Logo"
+                className="h-12 rounded-lg w-auto transform hover:scale-105 transition-transform duration-300 ease-in-out filter drop-shadow-[0_4px_6px_rgba(255,255,0,0.5)]"
+              />
             </Link>
           </div>
+
           <div className="flex-1">
             <nav className="grid items-start px-4 text-sm font-medium lg:px-6">
               <Link
@@ -68,14 +76,13 @@ const DashboardLayout = () => {
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
               >
                 <HomeIcon className="h-6 w-6 text-[#BA0D09]" />
-              
                 Dashboard
               </Link>
               <Link
                 to="/dashboard/projects"
                 className="flex items-center gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
               >
-                <BriefcaseBusiness  className="h-6 w-6 text-[#BA0D09]" />
+                <BriefcaseBusiness className="h-6 w-6 text-[#BA0D09]" />
                 Manage Projects
               </Link>
               <Link
@@ -114,7 +121,11 @@ const DashboardLayout = () => {
         <header className="flex h-14 items-center gap-4 border-b bg-gray-50  px-4 lg:h-[60px] lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 md:hidden"
+              >
                 <Menu className="h-5 w-5 text-[#BA0D09]" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
@@ -122,7 +133,10 @@ const DashboardLayout = () => {
             <SheetContent side="left" className="flex flex-col bg-white">
               <nav className="grid gap-2 text-lg font-medium">
                 <div className="flex h-14 items-center border-b px-2 lg:h-[60px] lg:px-6 bg-white">
-                  <Link to="/dashboard/home" className="flex items-center gap-2 font-semibold"></Link>
+                  <Link
+                    to="/dashboard/home"
+                    className="flex items-center gap-2 font-semibold"
+                  ></Link>
                 </div>
                 <Link
                   to="/dashboard/home"
@@ -170,7 +184,6 @@ const DashboardLayout = () => {
                   placeholder="Search Projects ..."
                   className="border p-2 rounded-3xl w-full pr-10 focus:outline-none focus:ring focus:ring-green-200  md:w-2/3 lg:w-1/3"
                 />
-                
               </div>
             </form>
           </div>
@@ -181,7 +194,10 @@ const DashboardLayout = () => {
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white shadow-md border border-gray-300">
+            <DropdownMenuContent
+              align="end"
+              className="bg-white shadow-md border border-gray-300"
+            >
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Settings</DropdownMenuItem>

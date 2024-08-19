@@ -11,12 +11,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
-  LoaderCircle,
+
   MoreHorizontalIcon,
   CalendarIcon,
   PlusCircle,
-  SearchCheck,
+
   SearchIcon,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   Card,
@@ -40,10 +42,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar } from "@/components/ui/avatar";
-import DatePicker from "react-datepicker";
+
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ManageTeam = () => {
   const navigate = useNavigate();
@@ -123,7 +125,7 @@ const ManageTeam = () => {
         request.fullName.toLowerCase().includes(searchName.toLowerCase())
       );
     }
-    
+
     setFilteredRequests(filtered);
   };
 
@@ -138,18 +140,17 @@ const ManageTeam = () => {
     navigate("/dashboard/team/create");
   };
 
-  // delete user
+// delete user
 
- 
-    const handleDelete = async (id) => {
-      try {
-        await axios.put(`/api/user/delete/${id}`);
-        toast.success("User deleted successfully");
-        setRequests(prev => prev.filter(request => request._id !== id)); 
-      } catch (error) {
-        toast.error("Error deleting the user");
-      }
+  const handleDelete = async (id) => {
+    try {
+      await axios.put(`/api/user/delete/${id}`);
+      toast.success("User deleted successfully");
+      setRequests((prev) => prev.filter((request) => request._id !== id));
+    } catch (error) {
+      toast.error("Error deleting the user");
     }
+  };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -200,13 +201,7 @@ const ManageTeam = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoaderCircle className="h-10 w-10 text-green-600 animate-spin" />
-      </div>
-    );
-  }
+
 
   if (error) {
     return (
@@ -254,21 +249,22 @@ const ManageTeam = () => {
             className="absolute top-2 right-4 text-gray-500 pointer-events-none"
           />
         </div>
-
-       
       </div>
 
-      <Card className="mt-2 w-full rounded-3xl shadow-md hover:shadow-lg transition-shadow duration-300 max-w-sm sm:max-w-full">
+      <Card className="mt-2 w-full rounded-3xl shadow-sm  transition-shadow duration-300 max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle>View List Of All Users</CardTitle>
-          
+          <CardDescription>
+            To Check Monthly{" "}
+            <span className="text-red-500"> Report Attendance </span> Click User
+            Record.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                {/* <TableHead>Company ID</TableHead> */}
                 <TableHead>Role</TableHead>
                 <TableHead>Job Type</TableHead>
                 <TableHead>Designation</TableHead>
@@ -279,83 +275,96 @@ const ManageTeam = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentRequests.map((request) => (
-                <TableRow
-                  key={request._id}
-                  className="hover:bg-gray-100 transition-colors duration-300"
-                >
-                  <TableCell className="font-semibold">
-                    {request.fullName}
-                  </TableCell>
-
-                  {/* <TableCell>{request.companyId}</TableCell> */}
-
-                  <TableCell>
-                    <Badge
-                      className={`${getBadgeColor(
-                        "role",
-                        request.role
-                      )} text-sm py-1  rounded-3xl`}
-                    >
-                      {request.role}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell>
-                    <Badge
-                      className={`${getBadgeColor(
-                        "jobType",
-                        request.jobType
-                      )}  text-sm py-1  rounded-3xl`}
-                    >
-                      {request.jobType}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell className="font-semibold">
-                    {request.designation}
-                  </TableCell>
-
-                  <TableCell>{request.email}</TableCell>
-                  <TableCell>{request.contact}</TableCell>
-                  <TableCell>{request.address}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <MoreHorizontalIcon />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDelete(request._id)}
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+              {loading ? (
+                Array.from({ length: requestsPerPage }).map((_, index) => (
+                  <TableRow key={index} className="cursor-pointer hover:bg-gray-50 rounded-3xl">
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-10" /></TableCell>
+                  </TableRow>
+                ))
+              ) : currentRequests.length > 0 ? (
+                currentRequests.map((request) => (
+                  <TableRow key={request._id} className="cursor-pointer hover:bg-gray-50 rounded-3xl"  onClick={() => {
+                    
+                  }}>
+                    <TableCell>{request.fullName}</TableCell>
+                    <TableCell>
+                      <Badge className={getBadgeColor("role", request.role)}>
+                        {request.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={getBadgeColor("jobType", request.jobType)}>
+                        {request.jobType}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={getBadgeColor("designation", request.designation)}>
+                        {request.designation}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{request.email}</TableCell>
+                    <TableCell>{request.contact}</TableCell>
+                    <TableCell>{request.address}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost">
+                            <MoreHorizontalIcon size={20} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem>
+                            <Link to="#">
+                              Edit 
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            asChild
+                            onClick={() => handleDelete(request._id)}
+                          >
+                            <Link to="#">
+                              Delete
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center text-red-500">
+                    No records found.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
-          {/* Pagination */}
-          <div className="flex justify-center mt-4 space-x-2">
-            {Array.from({
-              length: Math.ceil(filteredRequests.length / requestsPerPage),
-            }).map((_, index) => (
-              <Button
-                key={index}
-                onClick={() => paginate(index + 1)}
-                className={`px-4 py-2 text-sm rounded-full ${
-                  currentPage === index + 1
-                    ? "bg-[#BA0D09] text-white"
-                    : "bg-gray-200"
-                }`}
-              >
-                {index + 1}
-              </Button>
-            ))}
+      
+          <div className="flex justify-between items-center mt-4">
+            <Button
+              disabled={currentPage === 1}
+              onClick={() => paginate(currentPage - 1)}
+              variant="ghost"
+            >
+              <ChevronLeft />
+            </Button>
+            <span>Page {currentPage} of {Math.ceil(requests.length / requestsPerPage)}</span>
+            <Button
+              disabled={currentPage === Math.ceil(requests.length / requestsPerPage)}
+              onClick={() => paginate(currentPage + 1)}
+              variant="ghost"
+            >
+              <ChevronRight />
+            </Button>
           </div>
         </CardContent>
       </Card>
